@@ -1,14 +1,13 @@
 import com.tuplejump.sbt.yeoman.Yeoman
 
-name := "play24-slick3-silhouette"
+resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
+name := "RestaurantGuide"
 
 version := "1.0"
 
-lazy val `play24-slick3-silhouette` = (project in file(".")).enablePlugins(PlayScala)
+lazy val `restaurant-guide` = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.7"
-
-resolvers += "Atlassian Releases" at "https://maven.atlassian.com/public/"
 
 routesGenerator := InjectedRoutesGenerator
 
