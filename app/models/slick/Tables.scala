@@ -23,11 +23,13 @@ class Users(tag: Tag) extends Table[User](tag, "USERS") {
 
   def email = column[String]("EMAIL")
 
+  def image = column[Array[Byte]]("IMAGE")
+
   def providerID = column[String]("PROVIDER_ID")
 
   def providerKey = column[String]("PROVIDER_KEY")
 
-  def * = (id.?, firstname, lastname, email, providerID, providerKey) <>(User.withoutRoles, User.toTuple)
+  def * = (id.?, firstname, lastname, email, image.?, providerID, providerKey) <>(User.withoutRoles, User.toTuple)
 
   def preview = (id, firstname, lastname, email) <>((UserPreview.apply _).tupled,UserPreview.unapply)
 }

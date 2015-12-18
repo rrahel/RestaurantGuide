@@ -37,7 +37,7 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
     "must provide a list of users if the user is an admin" in new SecurityTestContext {
-      override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
+      override val identity = User(Some(1), "The", "Admin", "admin@test.com", None, "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         createTestUsers(7,userRepo).futureValue
@@ -51,7 +51,7 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
     "must delete a user if the current user is an admin" in new SecurityTestContext {
-      override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
+      override val identity = User(Some(1), "The", "Admin", "admin@test.com", None, "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         createTestUsers(7,userRepo).futureValue
@@ -72,6 +72,6 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
 
   def createTestUsers(number: Int, userRepo: UserRepository) =
     Future.sequence((1 to number)
-      .map(i => User(None, s"First$i", s"Last$i", s"user$i@test.com", "myprovider", s"user$i@test.com"))
+      .map(i => User(None, s"First$i", s"Last$i", s"user$i@test.com", None, "myprovider", s"user$i@test.com"))
       .map(userRepo.save(_)))
 }

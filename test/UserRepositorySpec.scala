@@ -34,7 +34,7 @@ class UserRepositorySpec extends PlaySpec with ScalaFutures {
     "store users" in new SecurityTestContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
         insertedUser.id must not be (None)
         val user = userRepo.findByEmail("jd@test.com").futureValue.get
         user.email must be("jd@test.com")
@@ -46,7 +46,7 @@ class UserRepositorySpec extends PlaySpec with ScalaFutures {
         val userRepo = app.injector.instanceOf[UserRepository]
         val count = userRepo.count.futureValue
         count must be(0)
-        userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
         val count2 = userRepo.count.futureValue
         count2 must be(1)
       }
@@ -62,7 +62,7 @@ class UserRepositorySpec extends PlaySpec with ScalaFutures {
         val userRepo = app.injector.instanceOf[UserRepository]
         val count = userRepo.count.futureValue
         count must be(0)
-        userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
         val user = userRepo.findByEmail("jd@test.com").futureValue.get
         user.roles must contain only ("USER")
         userRepo.save(user.addRole("ADMINISTRATOR")).futureValue
@@ -107,7 +107,7 @@ class UserRepositorySpec extends PlaySpec with ScalaFutures {
 
   def createTestUsers(number: Int, userRepo: UserRepository) =
     Future.sequence((1 to number)
-      .map(i => User(None, s"First$i", s"Last$i", s"user$i@test.com", "credentials", s"user$i@test.com"))
+      .map(i => User(None, s"First$i", s"Last$i", s"user$i@test.com", None, "credentials", s"user$i@test.com"))
       .map(userRepo.save(_)))
 
 }

@@ -12,7 +12,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 trait SecurityTestContext {
 
-  val identity = User(Some(1), "John", "Doe", "jd@test.com", "facebook", "jd@test.com")
+  val identity = User(Some(1), "John", "Doe", "jd@test.com", None, "facebook", "jd@test.com")
   implicit lazy val environment = FakeEnvironment[User, JWTAuthenticator](Seq(identity.loginInfo -> identity))
 
   val memDB = Map(

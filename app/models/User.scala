@@ -14,12 +14,13 @@ case class User(id: Option[Int],
                 firstname: String,
                 lastname: String,
                 email: String,
+                image: Option[Array[Byte]],
                 providerID: String,
                 providerKey: String,
                 roles: Set[String] = Set("USER")) extends Identity {
   def loginInfo = new LoginInfo(providerID, providerKey)
 
-  def toTuple() = (id, firstname, lastname, email, providerID, providerKey)
+  def toTuple() = (id, firstname, lastname, email, image, providerID, providerKey)
 
   def addRole(role: String) = copy(roles = roles + role)
 }
@@ -57,8 +58,8 @@ object UserPreview {
 object User {
   implicit val userFormat = Json.format[User]
 
-  def withoutRoles(t: (Option[Int], String, String, String, String, String)) =
-    User(t._1, t._2, t._3, t._4, t._5, t._6, Set())
+  def withoutRoles(t: (Option[Int], String, String, String, Option[Array[Byte]], String, String)) =
+    User(t._1, t._2, t._3, t._4, t._5, t._6, t._7, Set())
 
-  def toTuple(u: User) = Some((u.id, u.firstname, u.lastname, u.email, u.providerID, u.providerKey))
+  def toTuple(u: User) = Some((u.id, u.firstname, u.lastname, u.email, u.image, u.providerID, u.providerKey))
 }
