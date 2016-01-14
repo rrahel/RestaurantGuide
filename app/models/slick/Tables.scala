@@ -4,7 +4,7 @@ package models.slick
 import javax.xml.ws.BindingProvider
 
 import com.mohiva.play.silhouette.api.util.PasswordInfo
-import models.{UserPreview, User}
+import models.{Restaurant, RestaurantPreview, UserPreview, User, Comment, Rating}
 import slick.driver.H2Driver.api._
 import slick.lifted.TableQuery
 import scala.language.implicitConversions
@@ -79,3 +79,56 @@ object DBPasswordInfo {
   implicit def dbTableElement2PasswordInfo(pwInfo: PasswordInfos#TableElementType): PasswordInfo = new PasswordInfo(pwInfo.hasher,pwInfo.password,pwInfo.salt)
 }
 
+class Restaurants(tag: Tag) extends Table[Restaurant](tag, "RESTAURANTS"){
+  def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+  def name = column[String]("NAME")
+  def description = column[String]("DESCRIPTION")
+  def category = column[String]("CATEGORY")
+  def phone = column[String]("PHONE")
+  def email = column[String]("EMAIL")
+  def image = column[Array[Byte]]("IMAGE")
+  def menu = column[Array[Byte]]("MENU")
+  def website = column[String]("WEBSITE")
+  def rating = column[Double]("RATING")
+  def street = column[String]("STREET")
+  def city = column[String]("CITY")
+  def zip = column[String]("ZIP")
+  def lat = column[Double]("LAT")
+  def lng = column[Double]("LNG")
+  def * = (id.?, name, description.?, category, phone.?, email.?, image.?, menu.?, website.?, rating.?, street, city, zip, lat, lng) <> (Restaurant.tupled, Restaurant.toTuple)
+  def preview = (id.?, name, image.?, rating.?, city) <> (RestaurantPreview.tupled, RestaurantPreview.toTuple)
+}
+
+object Restaurants{
+  val restaurants = TableQuery[Restaurants]
+}
+
+class Comments(tag: Tag) extends Table[Comment](tag, "COMMENTS"){
+  def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+  def content = column[String]("CONTENT")
+  def userId = column[Int]("USER_ID")
+  def restaurantId = column[Int]("RESTAURANT_ID")
+  def * = (id.?, content, userId, restaurantId) <> (Comment.tupled, Comment.toTuple)
+  def userFK = foreignKey("USER_FK", userId, Users.users)(u => u.id)
+  def groupFK = foreignKey("GROUP_FK", restaurantId, Restaurants.restaurants)(r => r.id)
+
+}
+
+object Comments{
+  val comments = TableQuery[Comments]
+}
+
+class Ratings(tag: Tag) extends Table[Rating](tag, "RATINGS"){
+  def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+  def rating = column[Double]("CONTENT")
+  def userId = column[Int]("USER_ID")
+  def restaurantId = column[Int]("RESTAURANT_ID")
+  def * = (id.?, rating, userId, restaurantId) <> (Rating.tupled, Rating.toTuple)
+  def userFK = foreignKey("USER_FK", userId, Users.users)(u => u.id)
+  def groupFK = foreignKey("GROUP_FK", restaurantId, Restaurants.restaurants)(r => r.id)
+
+}
+
+object Ratings{
+  val ratings = TableQuery[Ratings]
+}
