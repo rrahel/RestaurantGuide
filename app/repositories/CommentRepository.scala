@@ -1,0 +1,47 @@
+package repositories
+
+import models.Comment
+
+import scala.concurrent.Future
+
+/**
+ * Created by Christoph on 16.01.2016.
+ */
+trait CommentRepository {
+
+  /**
+   * create/update a comment
+   * @param comment
+   * @return
+   */
+  def save(comment: Comment): Future[Comment]
+
+  /**
+   * find all comments from one restaurant
+   * @param restaurantId
+   * @return
+   */
+  def readAllCommentsFromOneRestaurant(restaurantId: Int):Future[Seq[Comment]]
+
+  /**
+   * find all comments from one user
+   * @param userId
+   * @return
+   */
+  def readAllCommentsFromOneUser(userId: Int):Future[Seq[Comment]]
+
+  /**
+   * delete an existing comment
+   * @param commentId
+   * @return
+   */
+  def delete(commentId: Int):Future[Unit]
+
+  /**
+   * find existing comment by id
+   * @param commentId
+   * @return
+   */
+  def find(commentId: Int):Future[Option[Comment]]
+
+}

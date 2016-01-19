@@ -2,13 +2,17 @@ package controllers
 
 import javax.inject.Inject
 
+import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
+import com.mohiva.play.silhouette.api.util.PasswordHasher
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
+import models.services.UserIdentityService
 import play.api.i18n.{Messages, MessagesApi}
 import play.api.libs.json.Json
-import play.api.mvc.Request
-import repositories.UserRepository
-import com.mohiva.play.silhouette.api.{Authorization, Environment, Silhouette}
+import play.api.mvc.{Action, Request}
+import _root_.repositories.UserRepository
+import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
-import models.User
+import models.{SignUpInfo, User}
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import models.UserPreview._
@@ -39,7 +43,11 @@ import scala.concurrent.duration.FiniteDuration
  */
 class UserController @Inject()(val messagesApi: MessagesApi,
                                val env: Environment[User, JWTAuthenticator],
-                               userRepository: UserRepository) extends Silhouette[User, JWTAuthenticator] {
+                               userRepository: UserRepository,
+                               userService: UserIdentityService,
+                               authInfoRepository: AuthInfoRepository,
+                               passwordHasher: PasswordHasher,
+                               credentialsProvider: CredentialsProvider) extends Silhouette[User, JWTAuthenticator] {
 
   case class IsAdmin() extends Authorization[User, JWTAuthenticator] {
     override def isAuthorized[B](identity: User, authenticator: JWTAuthenticator)(implicit request: Request[B], messages: Messages): Future[Boolean] =
@@ -59,5 +67,37 @@ class UserController @Inject()(val messagesApi: MessagesApi,
 
   def count = SecuredAction(IsAdmin()
   ).async(implicit request => userRepository.count.map(count => Ok(Json toJson count)))
+
+  def save = SecuredAction(IsAdmin()).async(parse.json) { implicit request =>
+    request.body.validate[SignUpInfo].map { data =>
+      val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
+      userService.retrieve(loginInfo).flatMap {
+        case Some(user) =>
+          val authInfo = passwordHasher.hash(data.password)
+          for {
+            authInfo <- authInfoRepository.update(loginInfo, authInfo)
+          } yield {
+            env.eventBus.publish(SignUpEvent(user, request, request2Messages))
+            val successMessage = "Changed password from user: " + data.email
+            Ok(Json.obj("message" -> successMessage))
+          }
+
+        case None =>
+          val authInfo = passwordHasher.hash(data.password)
+          val user = User(None,data.firstname,data.lastname,data.email,None,loginInfo.providerID,loginInfo.providerKey)
+          for {
+            user <- userService.save(user)
+            authInfo <- authInfoRepository.add(loginInfo, authInfo)
+          } yield {
+            env.eventBus.publish(SignUpEvent(user, request, request2Messages))
+            val successMessage = "Created new user: " + data.email
+            Ok(Json.obj("message" -> successMessage))
+          }
+      }
+
+    }.recoverTotal {
+      case error => Future.successful(BadRequest(Json.obj("message" -> Messages("invalid.data"))))
+    }
+  }
 
 }
