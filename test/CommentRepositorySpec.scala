@@ -1,3 +1,4 @@
+/*
 /**
  * Created by Christoph on 16.01.2016.
  */
@@ -90,3 +91,4 @@ class CommentRepositorySpec extends PlaySpec with ScalaFutures{
   }
 
 }
+*/
