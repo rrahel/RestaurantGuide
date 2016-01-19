@@ -30,7 +30,7 @@ class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConf
   //delete a restaurant
   override def delete(restaurantId: Int): Future[Unit] = {
     val delQuery = for{
-      //we must delete the rations **** dont forget *****
+      //we must delete the ratins **** dont forget *****
       restaurantCommentsDel <- comments.filter(_.restaurantId === restaurantId).delete
       restaurantDel <- restaurants.filter(_.id === restaurantId).delete
     }yield (restaurantCommentsDel, restaurantDel)
