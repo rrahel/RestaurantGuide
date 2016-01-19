@@ -1,9 +1,10 @@
+
 /**
  * Created by Christoph on 16.01.2016.
  */
 
-import models.{Restaurant, User, Comment}
-import repositories.{RestaurantRepository, UserRepository, CommentRepository}
+import models.{Restaurant, User, Rating}
+import repositories.{RestaurantRepository, UserRepository, RatingRepository}
 
 import helpers.SecurityTestContext
 import org.scalatest.concurrent.ScalaFutures
@@ -22,79 +23,83 @@ import scala.concurrent.Future
 
 import org.scalatest.time.{Millis, Seconds, Span}
 
-class CommentRepositorySpec extends PlaySpec with ScalaFutures{
+
+class RatingRepositorySpec extends PlaySpec with ScalaFutures{
 
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
-  "CommentRepository" must {
-    "create new comments" in new SecurityTestContext {
+  "RatingRepository" must {
+    "create new ratings" in new SecurityTestContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
-        val commentRepo = app.injector.instanceOf[CommentRepository]
+        val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
         val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
-        val testComment = commentRepo.save(newComment).futureValue
-        testComment.id must not be(None)
-        testComment.content must be(newComment.content)
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
+        val testRating = ratingRepo.save(newRating).futureValue
+        testRating.id must not be(None)
+        testRating.rating must be(newRating.rating)
       }
     }
 
-    "read all comments from one user" in new SecurityTestContext {
+    "read all ratings from one user" in new SecurityTestContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
-        val commentRepo = app.injector.instanceOf[CommentRepository]
+        val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
         val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
-        val testComment = commentRepo.save(newComment).futureValue
-        val commentsSeq = commentRepo.readAllCommentsFromOneUser(insertedUser.id.get).futureValue
-        newComment.content mustBe commentsSeq.head.content
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
+        val testRating = ratingRepo.save(newRating).futureValue
+        val ratingsSeq = ratingRepo.readAllRatingsFromOneUser(insertedUser.id.get).futureValue
+        ratingsSeq.size mustBe 1
+        newRating.rating mustBe ratingsSeq.head.rating
       }
     }
 
-    "read all comments from one restaurant" in new SecurityTestContext {
+    "read all ratings from one restaurant" in new SecurityTestContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
-        val commentRepo = app.injector.instanceOf[CommentRepository]
+        val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
         val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
-        val testComment = commentRepo.save(newComment).futureValue
-        val commentsSeq = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get).futureValue
-        newComment.content mustBe commentsSeq.head.content
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
+        val testRating = ratingRepo.save(newRating).futureValue
+        val ratingsSeq = ratingRepo.readAllRatingsFromOneRestaurant(restaurant1.id.get).futureValue
+        ratingsSeq.size mustBe 1
+        newRating.rating mustBe ratingsSeq.head.rating
       }
     }
 
-    "update existing comment" in new SecurityTestContext {
+    "update existing rating" in new SecurityTestContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
-        val commentRepo = app.injector.instanceOf[CommentRepository]
+        val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
         val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
-        val testComment = commentRepo.save(newComment).futureValue
-        val changeComment = Comment(testComment.id, "testChangeComment", insertedUser.id.get, restaurant1.id.get)
-        val testChangeComment = commentRepo.save(changeComment).futureValue
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
+        val testRating = ratingRepo.save(newRating).futureValue
+        val changeRating = Rating(testRating.id, 10, insertedUser.id.get, restaurant1.id.get)
+        val testChangeRating = ratingRepo.save(changeRating).futureValue
+        testChangeRating.rating mustBe changeRating.rating
       }
     }
 
-    "delete exisitng comment" in new SecurityTestContext {
+    "delete exisitng rating" in new SecurityTestContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
-        val commentRepo = app.injector.instanceOf[CommentRepository]
+        val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
         val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
-        val testComment = commentRepo.save(newComment).futureValue
-        commentRepo.delete(testComment.id.get)
-        val existingComment = commentRepo.find(testComment.id.get).futureValue
-        existingComment must be(None)
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
+        val testRating = ratingRepo.save(newRating).futureValue
+        ratingRepo.delete(testRating.id.get)
+        val existingRating = ratingRepo.find(testRating.id.get).futureValue
+        existingRating must be(None)
       }
     }
 

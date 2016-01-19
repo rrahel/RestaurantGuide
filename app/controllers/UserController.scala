@@ -75,7 +75,7 @@ class UserController @Inject()(val messagesApi: MessagesApi,
         case Some(user) =>
           val authInfo = passwordHasher.hash(data.password)
           for {
-            authInfo <- authInfoRepository.update(loginInfo, authInfo)
+            _ <- authInfoRepository.update(loginInfo, authInfo)
           } yield {
             env.eventBus.publish(SignUpEvent(user, request, request2Messages))
             val successMessage = "Changed password from user: " + data.email
@@ -90,7 +90,7 @@ class UserController @Inject()(val messagesApi: MessagesApi,
             authInfo <- authInfoRepository.add(loginInfo, authInfo)
           } yield {
             env.eventBus.publish(SignUpEvent(user, request, request2Messages))
-            val successMessage = "Created new user: " + data.email
+            val successMessage = "Create new user: " + data.email
             Ok(Json.obj("message" -> successMessage))
           }
       }
