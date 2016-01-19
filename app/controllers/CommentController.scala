@@ -28,7 +28,12 @@ class CommentController @Inject()(commentRepository: CommentRepository,
   // everybody is able to read comments
   def listAllCommentsFromOneRestaurant(restaurantId: Int, page:Option[Int],size:Option[Int]) = Action.async {
     commentRepository.readAllCommentsFromOneRestaurant(restaurantId, page.getOrElse(0),size.getOrElse(100))
-      .map(g => Ok(Json toJson g))
+      .map(c => Ok(Json toJson c))
+  }
+
+  // list all comments from the logged in user
+  def listAllCommentsFromOneUser() = SecuredAction.async {
+    implicit request => commentRepository.readAllCommentsFromOneUser(request.identity.id.get).map(c => Ok(Json toJson c))
   }
 
   // only admins can delete all comments
@@ -36,10 +41,9 @@ class CommentController @Inject()(commentRepository: CommentRepository,
     commentRepository.delete(commentId).map(d => Ok(Json.obj("message" -> "Comment was successfully deleted")))
   }
 
-  // user can create comments
   def createComment() = SecuredAction.async(parse.json) {
     implicit request => request.body.validate[Comment].map {
-      comment => commentRepository.save(comment).map(c => Ok(Json toJson c))
+      comment => commentRepository.save(comment,request.identity.id.get).map(c => Ok(Json toJson c))
     }.recoverTotal {
       case error => Future.successful(
         BadRequest(Json.obj("message" -> "Could not create comment"))
@@ -60,7 +64,7 @@ class CommentController @Inject()(commentRepository: CommentRepository,
   def updateComment(commentId: Int) = SecuredAction.async(parse.json) {
     implicit request => commentRepository.readOneCommentFromOneUser(commentId, request.identity.id.get).flatMap{
       case Some(c) => request.body.validate[Comment].map {
-        comment => commentRepository.save(comment).map(c => Ok(Json toJson c))
+        comment => commentRepository.save(comment,request.identity.id.get).map(c => Ok(Json toJson c))
       }.recoverTotal {
       case error => Future.successful(
       BadRequest(Json.obj("message" -> "Error while updating"))

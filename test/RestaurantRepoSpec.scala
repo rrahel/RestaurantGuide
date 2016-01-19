@@ -93,8 +93,8 @@ class RestaurantRepoSpec extends PlaySpec with ScalaFutures{
         val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
         val restaurant2 = restaurantRepo.create(Restaurant(None,"Restaurant2",None,"Albanisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
         val user1 = userRepo.save(User(None,"Jane","Miller","jm@test.com", None, "test","test")).futureValue
-        val comment1 = commentRepo.save(Comment(None, "Super geil", user1.id.get,restaurant1.id.get ))
-        val comment2 = commentRepo.save(Comment(None, "Super cool", user1.id.get,restaurant1.id.get ))
+        val comment1 = commentRepo.save(Comment(None, "Super geil", user1.id.get,restaurant1.id.get ), user1.id.get)
+        val comment2 = commentRepo.save(Comment(None, "Super cool", user1.id.get,restaurant1.id.get ), user1.id.get)
 
         restaurantRepo.all().futureValue.length mustBe 2
         restaurantRepo.delete(1).futureValue

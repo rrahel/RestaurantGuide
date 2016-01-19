@@ -14,7 +14,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
  * Created by cemirrah13 on 19.01.2016.
  */
 trait RepositoryAwareContext {
-  val identity = User(Some(1),"Jane","Miller","jm@test.com", None, "test","test")
+  val identity = User(Some(1),"John","Doe","jd@test.com", None, "test","test")
   val admin = User(Some(2),"Rrahel","Cemi","jm@test.com", None, "test","test", Set("USER", "ADMINISTRATOR"))
 
   implicit lazy val environment = FakeEnvironment[User, JWTAuthenticator](
