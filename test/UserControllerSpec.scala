@@ -1,9 +1,12 @@
+import com.mohiva.play.silhouette.api.util.PasswordHasher
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
 import helpers.SecurityTestContext
+import models.slick.PasswordInfos
 import models.{SignUpInfo, UserPreview, User}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Seconds, Span}
 import org.scalatestplus.play.PlaySpec
+import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.json.Json
 import play.api.test.Helpers._
 import play.api.test.{FakeRequest, WithApplication}
@@ -11,6 +14,9 @@ import play.filters.csrf.CSRF
 import repositories.UserRepository
 import com.mohiva.play.silhouette.test._
 import play.api.libs.concurrent.Execution.Implicits._
+import slick.driver.JdbcProfile
+import slick.lifted.TableQuery
+import slick.driver.H2Driver.api._
 
 import scala.concurrent.Future
 
@@ -20,6 +26,7 @@ import scala.concurrent.Future
 class UserControllerSpec extends PlaySpec with ScalaFutures {
 
   implicit override val patienceConfig = PatienceConfig(timeout = Span(1, Seconds))
+  import models.slick.DBPasswordInfo.dbTableElement2PasswordInfo
 
   "SecurityController" must {
     "not allow ordinary users to retrieve a lis of users" in new SecurityTestContext {
@@ -87,6 +94,15 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
         val Some(foundUser) = userRepo.findByEmail(newUser.email).futureValue
         foundUser.firstname mustBe newUser.firstname
         foundUser.email mustBe newUser.email
+        val pwInfos = TableQuery[PasswordInfos]
+        val dbConfigProvider = application.injector.instanceOf[DatabaseConfigProvider]
+        val db = dbConfigProvider.get[JdbcProfile].db
+        val pwInfo = db.run(pwInfos.result).futureValue
+        pwInfo.size mustBe 1
+        val userPwInfo = pwInfo.head
+        userPwInfo.userID mustBe foundUser.id.get
+        val hasher = application.injector.instanceOf[PasswordHasher]
+        hasher.matches(userPwInfo,"topsecret") mustBe true
       }
     }
 
@@ -105,6 +121,7 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
     }
 
     "change user password if the current user is an admin" in new SecurityTestContext {
+      override val identity = User(Some(1), "The", "Admin", "admin@test.com", None, "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
       new WithApplication(application) {
         val token = CSRF.SignedTokenProvider.generateToken
         val newUser = SignUpInfo("John", "Doe", "jd@test.com", "topsecret")
@@ -121,7 +138,7 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
         val Some(foundUser) = userRepo.findByEmail(newUser.email).futureValue
         foundUser.firstname mustBe newUser.firstname
         foundUser.email mustBe newUser.email
-        val changedUser = SignUpInfo("John", "Doe", "jd@test.com", "password")
+        val changedUser = SignUpInfo("John", "Doe", "jd@test.com", "veryTopSecret")
         val changedUserResponse = route(FakeRequest(POST, "/user")
           .withJsonBody(Json.toJson(newUser))
           .withAuthenticator[JWTAuthenticator](identity.loginInfo)
@@ -131,6 +148,17 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
         println(changedUserResponse)
         status(changedUserResponse) must be(OK)
         contentType(changedUserResponse) must be(Some("application/json"))
+        val Some(updatedUser) = userRepo.findByEmail(changedUser.email).futureValue
+        updatedUser.email mustBe changedUser.email
+        val pwInfos = TableQuery[PasswordInfos]
+        val dbConfigProvider = application.injector.instanceOf[DatabaseConfigProvider]
+        val db = dbConfigProvider.get[JdbcProfile].db
+        val pwInfo = db.run(pwInfos.result).futureValue
+        pwInfo.size mustBe 1
+        val userPwInfo = pwInfo.head
+        userPwInfo.userID mustBe updatedUser.id.get
+        val hasher = application.injector.instanceOf[PasswordHasher]
+        hasher.matches(userPwInfo,"veryTopSecret") mustBe true
 
       }
     }
