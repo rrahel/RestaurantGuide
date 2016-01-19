@@ -1,10 +1,9 @@
-/*
 /**
  * Created by Christoph on 16.01.2016.
  */
 
-import models.{User, Comment}
-import repositories.{UserRepository, CommentRepository}
+import models.{Restaurant, User, Comment}
+import repositories.{RestaurantRepository, UserRepository, CommentRepository}
 
 import helpers.SecurityTestContext
 import org.scalatest.concurrent.ScalaFutures
@@ -21,21 +20,24 @@ import play.api.test.Helpers._
 import org.scalatestplus.play._
 import scala.concurrent.Future
 
+import org.scalatest.time.{Millis, Seconds, Span}
+
 class CommentRepositorySpec extends PlaySpec with ScalaFutures{
 
+  implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
   "CommentRepository" must {
     "create new comments" in new SecurityTestContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val commentRepo = app.injector.instanceOf[CommentRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment).futureValue
-        //val commentsSeq = commentRepo.readAllCommentsFromOneUser(insertedUser.id.get).futureValue
-        //newComment.content mustBe commentsSeq.head.content
-        testComment must not be(None)
-        testComment must be(newComment.content)
+        testComment.id must not be(None)
+        testComment.content must be(newComment.content)
       }
     }
 
@@ -43,8 +45,10 @@ class CommentRepositorySpec extends PlaySpec with ScalaFutures{
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val commentRepo = app.injector.instanceOf[CommentRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment).futureValue
         val commentsSeq = commentRepo.readAllCommentsFromOneUser(insertedUser.id.get).futureValue
         newComment.content mustBe commentsSeq.head.content
@@ -55,10 +59,12 @@ class CommentRepositorySpec extends PlaySpec with ScalaFutures{
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val commentRepo = app.injector.instanceOf[CommentRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment).futureValue
-        val commentsSeq = commentRepo.readAllCommentsFromOneRestaurant(1).futureValue
+        val commentsSeq = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get).futureValue
         newComment.content mustBe commentsSeq.head.content
       }
     }
@@ -67,10 +73,12 @@ class CommentRepositorySpec extends PlaySpec with ScalaFutures{
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val commentRepo = app.injector.instanceOf[CommentRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment).futureValue
-        val changeComment = Comment(testComment.id, "testChangeComment", insertedUser.id.get, 1)
+        val changeComment = Comment(testComment.id, "testChangeComment", insertedUser.id.get, restaurant1.id.get)
         val testChangeComment = commentRepo.save(changeComment).futureValue
       }
     }
@@ -79,11 +87,13 @@ class CommentRepositorySpec extends PlaySpec with ScalaFutures{
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val commentRepo = app.injector.instanceOf[CommentRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment).futureValue
         commentRepo.delete(testComment.id.get)
-        val existingComment = commentRepo.find(testComment.id.get)
+        val existingComment = commentRepo.find(testComment.id.get).futureValue
         existingComment must be(None)
       }
     }
@@ -91,4 +101,4 @@ class CommentRepositorySpec extends PlaySpec with ScalaFutures{
   }
 
 }
-*/
+

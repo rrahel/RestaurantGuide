@@ -3,8 +3,8 @@
  * Created by Christoph on 16.01.2016.
  */
 
-import models.{User, Rating}
-import repositories.{UserRepository, RatingRepository}
+import models.{Restaurant, User, Rating}
+import repositories.{RestaurantRepository, UserRepository, RatingRepository}
 
 import helpers.SecurityTestContext
 import org.scalatest.concurrent.ScalaFutures
@@ -33,24 +33,28 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newRating = Rating(None, 5, insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
         testRating.id must not be(None)
-        //testRating.rating must be(newRating.rating)
+        testRating.rating must be(newRating.rating)
       }
     }
 
-    /*"read all ratings from one user" in new SecurityTestContext {
+    "read all ratings from one user" in new SecurityTestContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newRating = Rating(None, 5, insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
         val ratingsSeq = ratingRepo.readAllRatingsFromOneUser(insertedUser.id.get).futureValue
         ratingsSeq.size mustBe 1
-        //newRating.rating mustBe ratingsSeq.head.rating
+        newRating.rating mustBe ratingsSeq.head.rating
       }
     }
 
@@ -58,12 +62,14 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newRating = Rating(None, 5, insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
-        val ratingsSeq = ratingRepo.readAllRatingsFromOneRestaurant(1).futureValue
+        val ratingsSeq = ratingRepo.readAllRatingsFromOneRestaurant(restaurant1.id.get).futureValue
         ratingsSeq.size mustBe 1
-        //newRating.rating mustBe ratingsSeq.head.rating
+        newRating.rating mustBe ratingsSeq.head.rating
       }
     }
 
@@ -71,10 +77,12 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newRating = Rating(None, 5, insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
-        val changeRating = Rating(testRating.id, 10, insertedUser.id.get, 1)
+        val changeRating = Rating(testRating.id, 10, insertedUser.id.get, restaurant1.id.get)
         val testChangeRating = ratingRepo.save(changeRating).futureValue
         testChangeRating.rating mustBe changeRating.rating
       }
@@ -84,14 +92,16 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val newRating = Rating(None, 5, insertedUser.id.get, 1)
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
         ratingRepo.delete(testRating.id.get)
-        val existingRating = ratingRepo.find(testRating.id.get)
+        val existingRating = ratingRepo.find(testRating.id.get).futureValue
         existingRating must be(None)
       }
-    }*/
+    }
 
   }
 
