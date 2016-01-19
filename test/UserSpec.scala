@@ -38,7 +38,7 @@ class UserSpec extends PlaySpec with BeforeAndAfter with ScalaFutures {
       val user2 = User(None,"Jane","Miller","jm@test.com", None, "test","test")
       db.run(users+=user2).futureValue
       val allUsers = db.run(users.result).futureValue
-      allUsers.length must be(1)
+      allUsers.length must be(2)
       allUsers.head.id must not be(None)
     }
     "read a stored user" in {
