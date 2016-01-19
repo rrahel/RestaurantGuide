@@ -42,6 +42,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[UserIdentityService].to[UserIdentityServiceImpl]
     bind[UserRepository].to[UserRepositorySlickImpl]
     bind[CommentRepository].to[CommentRepositorySlickImpl]
+    bind[RestaurantRepository].to[RestaurantRepositoryImpl]
     bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoSlickImpl]
     bind[DelegableAuthInfoDAO[OAuth1Info]].to[OAuth1InfoRepositoryImpl]
     bind[DelegableAuthInfoDAO[OAuth2Info]].to[OAuth2InfoRepositoryImpl]
@@ -52,6 +53,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[FingerprintGenerator].toInstance(new DefaultFingerprintGenerator(false))
     bind[EventBus].toInstance(EventBus())
     bind[Clock].toInstance(Clock())
+
   }
 
   /**

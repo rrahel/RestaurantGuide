@@ -5,7 +5,7 @@ package repositories
  */
 
 import models.Restaurant
-import models.slick.Restaurants
+import models.slick.{Comments, Restaurants}
 import play.api.Play
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfig}
 import play.api.libs.concurrent.Execution.Implicits._
@@ -29,16 +29,40 @@ class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConf
 
   //delete a restaurant
   override def delete(restaurantId: Int): Future[Unit] = {
-
+    val delQuery = for{
+      //we must delete the rations **** dont forget *****
+      restaurantCommentsDel <- comments.filter(_.restaurantId === restaurantId).delete
+      restaurantDel <- restaurants.filter(_.id === restaurantId).delete
+    }yield (restaurantCommentsDel, restaurantDel)
+    db.run(delQuery).map(_ => {})
   }
 
   //find a particular restaurant
-  override def find(restaurantId: Int): Future[Option[Restaurant]] = ???
+  override def find(restaurantId: Int): Future[Option[Restaurant]] = db.run(
+  restaurants.filter(_.id === restaurantId).result.headOption)
 
   //create a restaurant
-  override def create(restaurant: Restaurant): Future[Restaurant] = ???
+  override def create(restaurant: Restaurant): Future[Restaurant] = {
+    val existingRestaurantFuture = restaurant.id match {
+      case None => Future.successful(None)
+      case Some(id) => find(id)
+    }
+    existingRestaurantFuture.flatMap{
+      case None => db.run(
+        (restaurants returning restaurants.map(_.id)
+          into((restaurant, id)=> restaurant.copy(id = Some(id)))) += restaurant
+      )
+      case Some(_) => db.run(
+      for{
+        updateRestaurant <- restaurants.filter(_.id === restaurant.id).update(restaurant)
+      }yield restaurant
+      )
+
+    }
+  }
 
   override protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
     val restaurants = TableQuery[Restaurants]
+    val comments = TableQuery[Comments]
     private val allQuery = restaurants.sortBy(r => (r.name.asc))
 }
