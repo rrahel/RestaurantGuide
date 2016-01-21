@@ -28,9 +28,6 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/',
     templateUrl: '/views/main.html'
     controller: 'MainCtrl'
-  .when '/about',
-    templateUrl: '/views/about.html'
-    controller: 'AboutCtrl'
   .when '/signup',
     templateUrl: '/views/signup.html'
     controller: 'SignUpCtrl'
@@ -77,6 +74,7 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   $authProvider.platform = 'browser'
   $authProvider.storage = 'localStorage'
 
+  ###
   # Facebook
   $authProvider.facebook({
    clientId: '1503078423241610',
@@ -128,6 +126,6 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
    url: '/authenticate/xing',
    name: 'xing',
    popupOptions: { width: 495, height: 500 }
-  })
+  }) #
 
 

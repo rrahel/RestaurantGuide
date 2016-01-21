@@ -16,7 +16,7 @@ GET           /signout                     @controllers.SecurityController.signO
 #User Endpoint
 GET           /user                        @controllers.UserController.list
 GET           /user/count                  @controllers.UserController.count
-GET           /user/pages/:page/:pageSize        @controllers.UserController.listWithPages(page:Int, pageSize:Int)
+GET           /user/pages/:page/:pageSize  @controllers.UserController.listWithPages(page:Int, pageSize:Int)
 DELETE        /user/:id                    @controllers.UserController.delete(id: Int)
 
 
