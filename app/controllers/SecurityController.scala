@@ -45,7 +45,7 @@ class SecurityController @Inject()(val messagesApi: MessagesApi,
           Future.successful(BadRequest(Json.obj("message" -> Messages("user.exists"))))
         case None =>
           val authInfo = passwordHasher.hash(data.password)
-          val user = User(None,data.firstname,data.lastname,data.email,None,loginInfo.providerID,loginInfo.providerKey)
+          val user = User(None,data.firstname,data.lastname,data.email,loginInfo.providerID,loginInfo.providerKey)
           for {
             user <- userService.save(user)
             authInfo <- authInfoRepository.add(loginInfo, authInfo)
