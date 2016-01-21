@@ -110,7 +110,7 @@ class Comments(tag: Tag) extends Table[Comment](tag, "COMMENTS"){
   def restaurantId = column[Int]("RESTAURANT_ID")
   def * = (id.?, content, userId, restaurantId) <> (Comment.tupled, Comment.toTuple)
   def userFK = foreignKey("USER_FK", userId, Users.users)(u => u.id)
-  def groupFK = foreignKey("GROUP_FK", restaurantId, Restaurants.restaurants)(r => r.id)
+  def restaurantFK = foreignKey("RESTAURANT_FK", restaurantId, Restaurants.restaurants)(r => r.id)
 
 }
 
@@ -120,12 +120,12 @@ object Comments{
 
 class Ratings(tag: Tag) extends Table[Rating](tag, "RATINGS"){
   def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
-  def rating = column[Double]("CONTENT")
+  def rating = column[Double]("RATING")
   def userId = column[Int]("USER_ID")
   def restaurantId = column[Int]("RESTAURANT_ID")
   def * = (id.?, rating, userId, restaurantId) <> (Rating.tupled, Rating.toTuple)
   def userFK = foreignKey("USER_FK", userId, Users.users)(u => u.id)
-  def groupFK = foreignKey("GROUP_FK", restaurantId, Restaurants.restaurants)(r => r.id)
+  def restaurantFK = foreignKey("RESTAURANT_FK", restaurantId, Restaurants.restaurants)(r => r.id)
 
 }
 
