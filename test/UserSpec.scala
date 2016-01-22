@@ -32,11 +32,10 @@ class UserSpec extends PlaySpec with BeforeAndAfter with ScalaFutures {
     }
     "store users" in {
 
-      val image = Array[Byte](10.toByte, 20.toByte, 30.toByte)
-      val user1 = User(None,"John","Doe","jd@test.com", Some(image), "test","test")
+      val user1 = User(None,"John","Doe","jd@test.com", "test","test")
       db.run(users+=user1).futureValue
       // test for None image failes
-      val user2 = User(None,"Jane","Miller","jm@test.com", Some(image), "test","test")
+      val user2 = User(None,"Jane","Miller","jm@test.com", "test","test")
       db.run(users+=user2).futureValue
       val allUsers = db.run(users.result).futureValue
       allUsers.length must be(2)

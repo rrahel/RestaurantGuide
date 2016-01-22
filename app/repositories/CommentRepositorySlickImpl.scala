@@ -26,14 +26,14 @@ class CommentRepositorySlickImpl extends CommentRepository with HasDatabaseConfi
    * @param comment
    * @return
    */
-  override def save(comment: Comment): Future[Comment] = {
+  override def save(comment: Comment, userId: Int): Future[Comment] = {
     val existingCommentFuture = comment.id match {
       case None => Future.successful(None)
       case Some(id) => find(id)
     }
     existingCommentFuture.flatMap {
       case None =>
-        db.run(comments returning comments.map(_.id) into ((comment,id) => comment.copy(id = Some(id)))+=comment)
+        db.run(comments returning comments.map(_.id) into ((comment,id) => comment.copy(id = Some(id),userId = userId))+=comment)
       case Some(_) => db.run(
           for {
             updateComment <- comments.filter(_.id === comment.id).update(comment)
@@ -47,8 +47,8 @@ class CommentRepositorySlickImpl extends CommentRepository with HasDatabaseConfi
    * @param restaurantId
    * @return
    */
-  override def readAllCommentsFromOneRestaurant(restaurantId: Int): Future[Seq[Comment]] = {
-    db.run(comments.filter(_.restaurantId === restaurantId).result)
+  override def readAllCommentsFromOneRestaurant(restaurantId: Int, page: Int, pageSize: Int): Future[Seq[Comment]] = {
+    db.run((comments.filter(_.restaurantId === restaurantId)).drop(page * pageSize).take(pageSize).result)
   }
 
   /**
@@ -56,8 +56,8 @@ class CommentRepositorySlickImpl extends CommentRepository with HasDatabaseConfi
    * @param userId
    * @return
    */
-  override def readAllCommentsFromOneUser(userId: Int): Future[Seq[Comment]] = {
-    db.run(comments.filter(_.userId === userId).result)
+  override def readOneCommentFromOneUser(commentId: Int, userId: Int): Future[Option[Comment]] = {
+    db.run(comments.filter(x => (x.id === commentId && x.userId === userId)).result.headOption)
   }
 
   /**
@@ -76,5 +76,14 @@ class CommentRepositorySlickImpl extends CommentRepository with HasDatabaseConfi
    */
   override def find(commentId: Int): Future[Option[Comment]] = {
     db.run(comments.filter(_.id === commentId).result.headOption)
+  }
+
+  /**
+   * read all comments from one user
+   * @param userId
+   * @return
+   */
+  override def readAllCommentsFromOneUser(userId: Int): Future[Seq[Comment]] = {
+    db.run(comments.filter(_.userId === userId).result)
   }
 }

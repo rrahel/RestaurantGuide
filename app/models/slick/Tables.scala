@@ -4,7 +4,7 @@ package models.slick
 import javax.xml.ws.BindingProvider
 
 import com.mohiva.play.silhouette.api.util.PasswordInfo
-import models.{Restaurant, RestaurantPreview, UserPreview, User, Comment, Rating}
+import models.{Restaurant, RestaurantPreview, UserPreview, User, Comment, Rating, Category}
 import slick.driver.H2Driver.api._
 import slick.lifted.TableQuery
 import scala.language.implicitConversions
@@ -23,13 +23,11 @@ class Users(tag: Tag) extends Table[User](tag, "USERS") {
 
   def email = column[String]("EMAIL")
 
-  def image = column[Array[Byte]]("IMAGE")
-
   def providerID = column[String]("PROVIDER_ID")
 
   def providerKey = column[String]("PROVIDER_KEY")
 
-  def * = (id.?, firstname, lastname, email, image.?, providerID, providerKey) <>(User.withoutRoles, User.toTuple)
+  def * = (id.?, firstname, lastname, email, providerID, providerKey) <>(User.withoutRoles, User.toTuple)
 
   def preview = (id, firstname, lastname, email) <>((UserPreview.apply _).tupled,UserPreview.unapply)
 }
@@ -83,11 +81,9 @@ class Restaurants(tag: Tag) extends Table[Restaurant](tag, "RESTAURANTS"){
   def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
   def name = column[String]("NAME")
   def description = column[String]("DESCRIPTION")
-  def category = column[String]("CATEGORY")
+  def category = column[Int]("CATEGORY")
   def phone = column[String]("PHONE")
   def email = column[String]("EMAIL")
-  def image = column[Array[Byte]]("IMAGE")
-  def menu = column[Array[Byte]]("MENU")
   def website = column[String]("WEBSITE")
   def rating = column[Double]("RATING")
   def street = column[String]("STREET")
@@ -95,8 +91,9 @@ class Restaurants(tag: Tag) extends Table[Restaurant](tag, "RESTAURANTS"){
   def zip = column[String]("ZIP")
   def lat = column[Double]("LAT")
   def lng = column[Double]("LNG")
-  def * = (id.?, name, description.?, category, phone.?, email.?, image.?, menu.?, website.?, rating.?, street, city, zip, lat, lng) <> (Restaurant.tupled, Restaurant.toTuple)
-  def preview = (id.?, name, image.?, rating.?, city) <> (RestaurantPreview.tupled, RestaurantPreview.toTuple)
+  def * = (id.?, name, description.?, category, phone.?, email.?, website.?, rating.?, street, city, zip, lat, lng) <> (Restaurant.tupled, Restaurant.toTuple)
+  def preview = (id.?, name, rating.?, city) <> (RestaurantPreview.tupled, RestaurantPreview.toTuple)
+  def categoryFK = foreignKey("CATEGORY_FK", category, Categories.categories)(c => c.id)
 }
 
 object Restaurants{
@@ -131,4 +128,15 @@ class Ratings(tag: Tag) extends Table[Rating](tag, "RATINGS"){
 
 object Ratings{
   val ratings = TableQuery[Ratings]
+}
+
+class Categories(tag: Tag) extends Table[Category](tag, "CATEGORIES"){
+  def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+  def name = column[String]("NAME")
+  def * = (id.?, name) <> (Category.tupled, Category.toTuple)
+
+}
+
+object Categories{
+  val categories = TableQuery[Categories]
 }

@@ -14,17 +14,27 @@ trait CommentRepository {
    * @param comment
    * @return
    */
-  def save(comment: Comment): Future[Comment]
+  def save(comment: Comment, userId: Int): Future[Comment]
 
   /**
    * find all comments from one restaurant
    * @param restaurantId
+   * @param page
+   * @param pageSize
    * @return
    */
-  def readAllCommentsFromOneRestaurant(restaurantId: Int):Future[Seq[Comment]]
+  def readAllCommentsFromOneRestaurant(restaurantId: Int, page: Int, pageSize: Int):Future[Seq[Comment]]
 
   /**
    * find all comments from one user
+   * @param commentId
+   * @param userId
+   * @return
+   */
+  def readOneCommentFromOneUser(commentId: Int, userId: Int):Future[Option[Comment]]
+
+  /**
+   * read all comments from one user
    * @param userId
    * @return
    */
@@ -43,5 +53,6 @@ trait CommentRepository {
    * @return
    */
   def find(commentId: Int):Future[Option[Comment]]
+
 
 }

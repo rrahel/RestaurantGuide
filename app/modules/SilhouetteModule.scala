@@ -43,6 +43,7 @@ class SilhouetteModule extends AbstractModule with ScalaModule {
     bind[UserRepository].to[UserRepositorySlickImpl]
     bind[RatingRepository].to[RatingRepositorySlickImpl]
     bind[CommentRepository].to[CommentRepositorySlickImpl]
+    bind[CategoryRepository].to[CategoryRepositorySlickImpl]
     bind[RestaurantRepository].to[RestaurantRepositoryImpl]
     bind[DelegableAuthInfoDAO[PasswordInfo]].to[PasswordInfoSlickImpl]
     bind[DelegableAuthInfoDAO[OAuth1Info]].to[OAuth1InfoRepositoryImpl]

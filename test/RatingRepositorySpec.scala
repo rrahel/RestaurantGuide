@@ -3,8 +3,8 @@
  * Created by Christoph on 16.01.2016.
  */
 
-import models.{Restaurant, User, Rating}
-import repositories.{RestaurantRepository, UserRepository, RatingRepository}
+import models.{Category, Restaurant, User, Rating}
+import repositories.{CategoryRepository, RestaurantRepository, UserRepository, RatingRepository}
 
 import helpers.SecurityTestContext
 import org.scalatest.concurrent.ScalaFutures
@@ -34,8 +34,10 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
         val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
         testRating.id must not be(None)
@@ -48,8 +50,10 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
         val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
         val ratingsSeq = ratingRepo.readAllRatingsFromOneUser(insertedUser.id.get).futureValue
@@ -63,8 +67,10 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
         val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
         val ratingsSeq = ratingRepo.readAllRatingsFromOneRestaurant(restaurant1.id.get).futureValue
@@ -78,8 +84,10 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
         val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
         val changeRating = Rating(testRating.id, 10, insertedUser.id.get, restaurant1.id.get)
@@ -93,8 +101,10 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
         val userRepo = app.injector.instanceOf[UserRepository]
         val ratingRepo = app.injector.instanceOf[RatingRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
         val newRating = Rating(None, 5, insertedUser.id.get, restaurant1.id.get)
         val testRating = ratingRepo.save(newRating).futureValue
         ratingRepo.delete(testRating.id.get)
