@@ -39,7 +39,7 @@ class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConf
 
   //find a particular restaurant
   override def find(restaurantId: Int): Future[Option[Restaurant]] = db.run(
-  restaurants.filter(_.id === restaurantId).result.headOption)
+    restaurants.filter(_.id === restaurantId).result.headOption)
 
   //create a restaurant
   override def create(restaurant: Restaurant): Future[Restaurant] = {
@@ -61,8 +61,15 @@ class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConf
     }
   }
 
+  //find restaurants by the category
+  override def findResByCat(catId: Int): Future[Some[Restaurant]] = ???
+
+
+
+
   override protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
-    val restaurants = TableQuery[Restaurants]
-    val comments = TableQuery[Comments]
-    private val allQuery = restaurants.sortBy(r => (r.name.asc))
+  val restaurants = TableQuery[Restaurants]
+  val comments = TableQuery[Comments]
+  private val allQuery = restaurants.sortBy(r => (r.name.asc))
+
 }

@@ -27,4 +27,7 @@ trait RestaurantRepository {
 
   //delete a restaurant
   def delete(restaurantId:Int):Future[Unit]
+
+  //find restaurants by the category
+  def findResByCat(catId: Int):Future[Some[Restaurant]]
 }
