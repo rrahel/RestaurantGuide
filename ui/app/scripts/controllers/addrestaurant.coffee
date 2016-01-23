@@ -8,10 +8,11 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'AddrestaurantCtrl', ->
-    @awesomeThings = [
-      'HTML5 Boilerplate'
-      'AngularJS'
-      'Karma'
-    ]
-    return
+  .controller 'AddrestaurantCtrl', ($scope,RestaurantFactory,$location)->
+    $scope.restaurant = new RestaurantFactory()
+    $scope.error = null
+    $scope.savedRestaurant = {}
+    $scope.save = ->
+      $scope.savedRestaurant = $scope.restaurant.$save()
+      .then -> $location.path "/"
+      .catch (resp) -> $scope.error = resp.data.message or resp.data
