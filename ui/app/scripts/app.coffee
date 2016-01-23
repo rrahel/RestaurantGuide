@@ -37,6 +37,9 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/listUsers',
     templateUrl: 'views/listusers.html'
     controller: 'ListusersCtrl'
+  .when '/addRestaurant',
+    templateUrl: 'views/addrestaurant.html'
+    controller: 'AddrestaurantCtrl'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>
@@ -73,6 +76,7 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   $authProvider.authHeader = 'X-Auth-Token'
   $authProvider.platform = 'browser'
   $authProvider.storage = 'localStorage'
+
 
   ###
   # Facebook
@@ -127,5 +131,4 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
    name: 'xing',
    popupOptions: { width: 495, height: 500 }
   }) #
-
-
+###
