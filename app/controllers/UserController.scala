@@ -73,15 +73,7 @@ class UserController @Inject()(val messagesApi: MessagesApi,
       val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)
       userService.retrieve(loginInfo).flatMap {
         case Some(user) =>
-          val authInfo = passwordHasher.hash(data.password)
-          for {
-            _ <- authInfoRepository.update(loginInfo, authInfo)
-          } yield {
-            env.eventBus.publish(SignUpEvent(user, request, request2Messages))
-            val successMessage = "Changed password from user: " + data.email
-            Ok(Json.obj("message" -> successMessage))
-          }
-
+          Future.successful(BadRequest(Json.obj("message" -> Messages("user.exists"))))
         case None =>
           val authInfo = passwordHasher.hash(data.password)
           val user = User(None,data.firstname,data.lastname,data.email,loginInfo.providerID,loginInfo.providerKey)

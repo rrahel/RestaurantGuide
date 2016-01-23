@@ -23,6 +23,11 @@ create table "PASSWORDINFO" (
   "USER_ID" INTEGER REFERENCES "USERS"
 );
 
+create table "CATEGORIES"(
+  "ID" SERIAL PRIMARY KEY,
+  "NAME" VARCHAR(25) NOT NULL
+);
+
 create table "RESTAURANTS"(
   "ID" SERIAL PRIMARY KEY,
   "NAME" VARCHAR(100) NOT NULL,
@@ -53,12 +58,6 @@ create table "RATINGS"(
   "RESTAURANT_ID" INTEGER REFERENCES "RESTAURANTS"
 );
 
-create table "CATEGORIES"(
-  "ID" SERIAL PRIMARY KEY,
-  "NAME" VARCHAR(25) NOT NULL
-);
-
-
 
 create INDEX loginInfo_index ON "USERS" ("PROVIDER_ID","PROVIDER_KEY") ;
 
@@ -67,7 +66,7 @@ drop INDEX loginInfo_index;
 drop table "PASSWORDINFO";
 drop table "ROLES";
 drop table "USERS";
+drop table "CATEGORIES";
 drop table "RESTAURANTS";
 drop table "COMMENTS";
 drop table "RATINGS";
-drop table "CATEGORIES";

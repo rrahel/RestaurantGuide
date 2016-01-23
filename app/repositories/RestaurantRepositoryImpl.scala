@@ -5,7 +5,7 @@ package repositories
  */
 
 import models.Restaurant
-import models.slick.{Comments, Restaurants}
+import models.slick.{Ratings, Comments, Restaurants}
 import play.api.Play
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfig}
 import play.api.libs.concurrent.Execution.Implicits._
@@ -30,7 +30,7 @@ class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConf
   //delete a restaurant
   override def delete(restaurantId: Int): Future[Unit] = {
     val delQuery = for{
-      //we must delete the ratins **** dont forget *****
+      restaurantRatingsDel <- ratings.filter(_.restaurantId === restaurantId).delete
       restaurantCommentsDel <- comments.filter(_.restaurantId === restaurantId).delete
       restaurantDel <- restaurants.filter(_.id === restaurantId).delete
     }yield (restaurantCommentsDel, restaurantDel)
@@ -64,5 +64,6 @@ class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConf
   override protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
     val restaurants = TableQuery[Restaurants]
     val comments = TableQuery[Comments]
+    val ratings = TableQuery[Ratings]
     private val allQuery = restaurants.sortBy(r => (r.name.asc))
 }
