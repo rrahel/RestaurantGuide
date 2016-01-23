@@ -15,15 +15,20 @@ class RestaurantRepoSpec extends PlaySpec with ScalaFutures{
 
   implicit val defaultPatience = PatienceConfig(timeout = Span(5, Seconds), interval = Span(500, Millis))
 
-  def createTestRestaurants(number: Int) = (1 to number).map(nr => Restaurant(None, s"Restaurant$nr",None,"Albanisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001 ))
+  //def createTestCategory = Category(None,"test")
+  //def createTestRestaurants(number: Int) = (1 to number).map(nr => Restaurant(None, s"Restaurant$nr",None,createTestCategory.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001 ))
 
   "RestaurantRepo" must{
 
     "get the number of restaurants " in new SecurityTestContext {
       new WithApplication(application) {
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
-        Future.sequence(createTestRestaurants(5).map(restaurantRepo.create)).futureValue
-        restaurantRepo.count().futureValue mustBe 5
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant2 = restaurantRepo.create(Restaurant(None,"Restaurant2",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+
+        restaurantRepo.count().futureValue mustBe 2
       }
     }
 
@@ -77,7 +82,16 @@ class RestaurantRepoSpec extends PlaySpec with ScalaFutures{
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val categoryRepo = app.injector.instanceOf[CategoryRepository]
         val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
-        Future.sequence(createTestRestaurants(8).map(restaurantRepo.create)).futureValue
+
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant2 = restaurantRepo.create(Restaurant(None,"Restaurant2",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant3 = restaurantRepo.create(Restaurant(None, "Restaurant3",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant4 = restaurantRepo.create(Restaurant(None,"Restaurant4",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant5 = restaurantRepo.create(Restaurant(None, "Restaurant5",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant6 = restaurantRepo.create(Restaurant(None,"Restaurant6",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant7 = restaurantRepo.create(Restaurant(None, "Restaurant7",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant8 = restaurantRepo.create(Restaurant(None,"Restaurant8",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+
         val page1 = restaurantRepo.all(0,5).futureValue
         page1.length mustBe 5
         page1.head.name mustBe "Restaurant1"

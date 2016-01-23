@@ -1,6 +1,7 @@
 package repositories
 
-import models.Category
+import models.{Restaurant, Category}
+import models.slick.Restaurants
 
 import scala.concurrent.Future
 
@@ -15,5 +16,14 @@ trait CategoryRepository {
    * @return
    */
   def create(category: Category):Future[Category]
+
+  def delete(categoryId: Int):Future[Unit]
+
+  def find(categoryId: Int):Future[Seq[Restaurant]]
+
+  def all():Future[Seq[Category]]
+
+
+
 
 }

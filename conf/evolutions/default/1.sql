@@ -58,7 +58,6 @@ create table "RATINGS"(
   "RESTAURANT_ID" INTEGER REFERENCES "RESTAURANTS"
 );
 
-
 create INDEX loginInfo_index ON "USERS" ("PROVIDER_ID","PROVIDER_KEY") ;
 
 # --- !Downs
