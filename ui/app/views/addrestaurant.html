@@ -1,0 +1,66 @@
+<div>
+  <div class="panel">
+    <div class="panel-heading">
+      <h3 class="panel-title">Add a new Restaurant</h3>
+    </div>
+    <div class="panel-body">
+      <div class="alert alert-danger" data-ng-bind="error" data-ng-show="error"></div>
+      <form novalidate name="restaurantForm" class="css-form">
+        <fieldset>
+          <div class="form-group">
+            <label for="name" class="control-label">Name</label>
+            <input type="text" class="form-control" id="name"
+                   data-ng-model="restaurant.name" required name="name" placeholder="Name of the new Restaurant"/>
+          </div>
+          <div class="form-group">
+            <label for="description" class="control-label">Description</label>
+                    <textarea type="text" class="form-control" id="description"
+                              data-ng-model="restaurant.description" required name="description"
+                              placeholder="Description of the new Restaurant"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="category" class="control-label">Category</label>
+            <input type="text" class="form-control" id="category"
+                   data-ng-model="restaurant.category.name" name="category" placeholder="Category of the new Restaurant"/>
+          </div>
+          <div class="form-group">
+            <label for="phone" class="control-label">Phone Number</label>
+            <input type="tel" class="form-control" id="phone"
+                   data-ng-model="restaurant.phone" required name="phone" placeholder="Phone Number of the new Restaurant"/>
+          </div>
+          <div class="form-group">
+            <label for="email" class="control-label">Email</label>
+            <input type="email" class="form-control" id="email"
+                   data-ng-model="restaurant.email" required name="email" placeholder="Email Address of the new Restaurant"/>
+          </div>
+          <div class="form-group">
+            <label for="website" class="control-label">Website</label>
+            <input type="url" class="form-control" id="website"
+                   data-ng-model="restaurant.website" name="website" placeholder="Website of the new Restaurant"/>
+          </div>
+          <div class="form-group">
+            <label for="street" class="control-label">Street</label>
+            <input type="text" class="form-control" id="street"
+                   data-ng-model="restaurant.street" required name="street" placeholder="Street where the new Restaurant is located"/>
+          </div>
+          <div class="form-group">
+            <label for="city" class="control-label">City</label>
+            <input type="text" class="form-control" id="city"
+                   data-ng-model="restaurant.city" required name="city" placeholder="City where the new Restaurant is located"/>
+          </div>
+          <div class="form-group">
+            <label for="zip" class="control-label">ZIP</label>
+            <input type="text" class="form-control" id="ZIP"
+                   data-ng-model="restaurant.zip" required name="zip" placeholder="ZIP code of the city"/>
+          </div>
+        </fieldset>
+        <div class="btn-toolbar">
+          <button class="btn btn-primary" data-ng-click="save()"
+                  data-ng-disabled="groupForm.$invalid">Save
+          </button>
+          <a href="#/" class="btn btn-default">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

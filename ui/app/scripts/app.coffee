@@ -17,9 +17,7 @@ app = angular
     'ngSanitize',
     'ngTouch',
     'ngQuantum',
-    'satellizer',
-    'ui.bootstrap',
-    'leaflet-directive'
+    'satellizer'
   ])
 
 app.run ($rootScope)->
@@ -43,6 +41,9 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
     templateUrl: 'views/addcategory.html'
     controller: 'AddcategoryCtrl'
     controllerAs: 'addcategory'
+  .when '/addRestaurant',
+    templateUrl: 'views/addrestaurant.html'
+    controller: 'AddrestaurantCtrl'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>
@@ -80,7 +81,7 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   $authProvider.platform = 'browser'
   $authProvider.storage = 'localStorage'
 
-
+  ###
   # Facebook
   $authProvider.facebook({
    clientId: '1503078423241610',
@@ -132,6 +133,6 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
    url: '/authenticate/xing',
    name: 'xing',
    popupOptions: { width: 495, height: 500 }
-  })
+  }) #
 
 

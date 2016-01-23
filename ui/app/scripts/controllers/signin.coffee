@@ -34,5 +34,3 @@ angular.module('uiApp')
         speed: 'normal'
         alertType:'danger'
         duration: 5000})
-
-
