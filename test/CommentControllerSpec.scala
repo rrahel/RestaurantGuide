@@ -12,8 +12,8 @@ import play.api.test.Helpers._
 import play.api.test.{FakeRequest, WithApplication}
 import play.filters.csrf.CSRF
 import scala.concurrent.ExecutionContext.Implicits.global
-import repositories.{UserRepository, CommentRepository, RestaurantRepository}
-import models.{User, Comment, Restaurant}
+import repositories.{CategoryRepository, UserRepository, CommentRepository, RestaurantRepository}
+import models.{Category, User, Comment, Restaurant}
 
 import scala.concurrent.Future
 import org.scalatest.time.{Millis, Seconds, Span}
@@ -29,9 +29,11 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
         val userRepo = app.injector.instanceOf[UserRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
         val commentRepo = app.injector.instanceOf[CommentRepository]
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val restaurant2 = restaurantRepo.create(Restaurant(None, "Restaurant2",None,"Englisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant2 = restaurantRepo.create(Restaurant(None, "Restaurant2",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
         val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val newComment2 = Comment(None, "testComment", insertedUser.id.get, restaurant2.id.get)
         val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
@@ -48,37 +50,16 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
 
-    "return a list with all comments from the logged in user" in new RepositoryAwareContext {
-      new WithApplication(application) {
-        val userRepo = app.injector.instanceOf[UserRepository]
-        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
-        val commentRepo = app.injector.instanceOf[CommentRepository]
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
-        val insertedUser2 = userRepo.save(User(None, "Jane", "Miller", "jm@test.com", None, "test2", "test2")).futureValue
-        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
-        val newComment2 = Comment(None, "testComment", insertedUser2.id.get, restaurant1.id.get)
-        val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
-        val testComment2 = commentRepo.save(newComment2,insertedUser2.id.get).futureValue
-        val listAllResponse = route(FakeRequest(GET, "/commentsU")
-          .withAuthenticator[JWTAuthenticator](identity.loginInfo)).get
-        status(listAllResponse) must be(OK)
-        contentType(listAllResponse) mustBe Some("application/json")
-        val json = contentAsJson(listAllResponse)
-        val comments = Json.fromJson[List[Comment]](json).get
-        comments.length mustBe 1
-        comments.head.content mustBe testComment.content
-      }
-    }
-
     "allow admins to delete comments" in new RepositoryAwareContext {
-      override val identity = User(Some(1), "The", "Admin", "admin@test.com", None, "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
+      override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
         val commentRepo = app.injector.instanceOf[CommentRepository]
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
         val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
         val deleteCommentString = "/commentA/" + testComment.id.get
@@ -94,9 +75,11 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
         val commentRepo = app.injector.instanceOf[CommentRepository]
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
         val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
         val deleteCommentString = "/commentA/" + testComment.id.get
@@ -111,9 +94,11 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
         val commentRepo = app.injector.instanceOf[CommentRepository]
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
         val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
         val deleteCommentString = "/comment/" + testComment.id.get
@@ -130,9 +115,11 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
         val commentRepo = app.injector.instanceOf[CommentRepository]
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
         val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val token = CSRF.SignedTokenProvider.generateToken
         val createCommentResponse = route(FakeRequest(POST, "/comment")
@@ -148,13 +135,46 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
 
-    "user can update their own comments" in new RepositoryAwareContext {
+    "user cannot delete other comments" in new RepositoryAwareContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
         val commentRepo = app.injector.instanceOf[CommentRepository]
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,"Italienisch",Some("+43 666 666 666"),Some("fun@coding.com"), None, None, None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", None, "test", "test")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+
+        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
+        val token = CSRF.SignedTokenProvider.generateToken
+        val createCommentResponse = route(FakeRequest(POST, "/comment")
+          .withAuthenticator[JWTAuthenticator](identity.loginInfo)
+          .withJsonBody(Json.toJson(newComment))
+          .withHeaders("Csrf-Token" -> token)
+          .withSession("csrfToken"->token)
+        ).get
+        status(createCommentResponse) must be(OK)
+
+        val testComment = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get,0,5).futureValue
+        val token2 = CSRF.SignedTokenProvider.generateToken
+        val deleteCommentString = "/comment/" + testComment.head.id.get
+        val deleteCommentResponse = route(FakeRequest(DELETE, deleteCommentString)
+          .withAuthenticator[JWTAuthenticator](identity2.loginInfo)
+        ).get
+        status(deleteCommentResponse) must be(BAD_REQUEST)
+
+      }
+    }
+
+    "user can update own comments" in new RepositoryAwareContext {
+      new WithApplication(application) {
+        val userRepo = app.injector.instanceOf[UserRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val commentRepo = app.injector.instanceOf[CommentRepository]
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
         val testComment = commentRepo.save(Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get),insertedUser.id.get).futureValue
         val changeComment = Comment(testComment.id, "changeComment", insertedUser.id.get, restaurant1.id.get)
         val token = CSRF.SignedTokenProvider.generateToken
@@ -171,6 +191,41 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
         comment.content mustBe changeComment.content
         val foundComments = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get,0,5).futureValue
         foundComments.length mustBe 1
+      }
+    }
+
+    "user cannot update other comments" in new RepositoryAwareContext {
+      new WithApplication(application) {
+        val userRepo = app.injector.instanceOf[UserRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val commentRepo = app.injector.instanceOf[CommentRepository]
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+
+        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
+        val token = CSRF.SignedTokenProvider.generateToken
+        val createCommentResponse = route(FakeRequest(POST, "/comment")
+          .withAuthenticator[JWTAuthenticator](identity.loginInfo)
+          .withJsonBody(Json.toJson(newComment))
+          .withHeaders("Csrf-Token" -> token)
+          .withSession("csrfToken"->token)
+        ).get
+        status(createCommentResponse) must be(OK)
+
+        val testComment = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get,0,5).futureValue
+        val token2 = CSRF.SignedTokenProvider.generateToken
+        val changeComment = Comment(None, "changeComment", insertedUser.id.get, restaurant1.id.get)
+        val updateCommentString = "/comment/" + testComment.head.id.get
+        val updateCommentResponse = route(FakeRequest(POST, updateCommentString)
+          .withAuthenticator[JWTAuthenticator](identity2.loginInfo)
+          .withJsonBody(Json.toJson(changeComment))
+          .withHeaders("Csrf-Token" -> token2)
+          .withSession("csrfToken"->token2)
+        ).get
+        status(updateCommentResponse) must be(BAD_REQUEST)
+
       }
     }
 

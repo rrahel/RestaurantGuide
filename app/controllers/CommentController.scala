@@ -31,11 +31,6 @@ class CommentController @Inject()(commentRepository: CommentRepository,
       .map(c => Ok(Json toJson c))
   }
 
-  // list all comments from the logged in user
-  def listAllCommentsFromOneUser() = SecuredAction.async {
-    implicit request => commentRepository.readAllCommentsFromOneUser(request.identity.id.get).map(c => Ok(Json toJson c))
-  }
-
   // only admins can delete all comments
   def deleteCommentAsAdmin(commentId: Int) = SecuredAction(IsAdmin()).async {
     commentRepository.delete(commentId).map(d => Ok(Json.obj("message" -> "Comment was successfully deleted")))
@@ -70,7 +65,7 @@ class CommentController @Inject()(commentRepository: CommentRepository,
       BadRequest(Json.obj("message" -> "Error while updating"))
       )
       }
-      case None => Future.successful(BadRequest(Json.obj("message" -> "Comment could not be deleted")))
+      case None => Future.successful(BadRequest(Json.obj("message" -> "Comment could not be updated")))
     }
   }
 

@@ -44,7 +44,7 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
     "provide a list of users if the user is an admin" in new SecurityTestContext {
-      override val identity = User(Some(1), "The", "Admin", "admin@test.com", None, "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
+      override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         createTestUsers(7,userRepo).futureValue
@@ -58,7 +58,7 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
     "delete a user if the current user is an admin" in new SecurityTestContext {
-      override val identity = User(Some(1), "The", "Admin", "admin@test.com", None, "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
+      override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
         createTestUsers(7,userRepo).futureValue
@@ -77,7 +77,7 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
     }
 
     "create a user if the current user is an admin" in new SecurityTestContext {
-      override val identity = User(Some(1), "The", "Admin", "admin@test.com", None, "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
+      override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
       new WithApplication(application) {
         val token = CSRF.SignedTokenProvider.generateToken
         val newUser = SignUpInfo("John", "Doe", "jd@test.com", "topsecret")
@@ -120,53 +120,10 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
 
-/*    "change user password if the current user is an admin" in new SecurityTestContext {
-      override val identity = User(Some(1), "The", "Admin", "admin@test.com", None, "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
-      new WithApplication(application) {
-        val token = CSRF.SignedTokenProvider.generateToken
-        val newUser = SignUpInfo("John", "Doe", "jd@test.com", "topsecret")
-        val newUserResponse = route(FakeRequest(POST, "/user")
-          .withJsonBody(Json.toJson(newUser))
-          .withAuthenticator[JWTAuthenticator](identity.loginInfo)
-          .withHeaders("Csrf-Token" -> token)
-          .withSession("csrfToken" -> token)
-        ).get
-        println(newUserResponse)
-        status(newUserResponse) must be(OK)
-        contentType(newUserResponse) must be(Some("application/json"))
-        val userRepo = application.injector.instanceOf[UserRepository]
-        val Some(foundUser) = userRepo.findByEmail(newUser.email).futureValue
-        foundUser.firstname mustBe newUser.firstname
-        foundUser.email mustBe newUser.email
-        val changedUser = SignUpInfo("John", "Doe", "jd@test.com", "veryTopSecret")
-        val changedUserResponse = route(FakeRequest(POST, "/user")
-          .withJsonBody(Json.toJson(newUser))
-          .withAuthenticator[JWTAuthenticator](identity.loginInfo)
-          .withHeaders("Csrf-Token" -> token)
-          .withSession("csrfToken" -> token)
-        ).get
-        println(changedUserResponse)
-        status(changedUserResponse) must be(OK)
-        contentType(changedUserResponse) must be(Some("application/json"))
-        val Some(updatedUser) = userRepo.findByEmail(changedUser.email).futureValue
-        updatedUser.email mustBe changedUser.email
-        val pwInfos = TableQuery[PasswordInfos]
-        val dbConfigProvider = application.injector.instanceOf[DatabaseConfigProvider]
-        val db = dbConfigProvider.get[JdbcProfile].db
-        val pwInfo = db.run(pwInfos.result).futureValue
-        pwInfo.size mustBe 1
-        val userPwInfo = pwInfo.head
-        userPwInfo.userID mustBe updatedUser.id.get
-        val hasher = application.injector.instanceOf[PasswordHasher]
-        hasher.matches(userPwInfo,"veryTopSecret") mustBe true
-
-      }
-    }*/
-
   }
 
   def createTestUsers(number: Int, userRepo: UserRepository) =
     Future.sequence((1 to number)
-      .map(i => User(None, s"First$i", s"Last$i", s"user$i@test.com", None, "myprovider", s"user$i@test.com"))
+      .map(i => User(None, s"First$i", s"Last$i", s"user$i@test.com", "myprovider", s"user$i@test.com"))
       .map(userRepo.save(_)))
 }

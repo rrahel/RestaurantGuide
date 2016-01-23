@@ -13,7 +13,7 @@ trait RestaurantRepository {
   //get the number of all restaurants
   def count():Future[Int]
 
-  //find a particular restaurant
+  //find a particular restaurant by id
   def find(restaurantId: Int):Future[Option[Restaurant]]
 
   //create a restaurant
@@ -27,4 +27,7 @@ trait RestaurantRepository {
 
   //delete a restaurant
   def delete(restaurantId:Int):Future[Unit]
+
+  //find restaurants by the category
+  def findResByCat(catId: Int):Future[Some[Restaurant]]
 }
