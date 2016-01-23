@@ -22,11 +22,16 @@ DELETE        /user/:id                    @controllers.UserController.delete(id
 
 #Comments
 GET           /comments/:id                @controllers.CommentController.listAllCommentsFromOneRestaurant(id:Int,page:Option[Int],size:Option[Int])
-GET           /commentsU                   @controllers.CommentController.listAllCommentsFromOneUser
 DELETE        /commentA/:id                @controllers.CommentController.deleteCommentAsAdmin(id: Int)
 DELETE        /comment/:id                 @controllers.CommentController.deleteComment(id: Int)
 POST          /comment/:id                 @controllers.CommentController.updateComment(id: Int)
 POST          /comment                     @controllers.CommentController.createComment
+
+#Ratings
+GET           /favorites                   @controllers.RatingController.topRestaurantsFromUser
+GET           /topRestaurants              @controllers.RatingController.topRestaurants
+POST          /rating/:id                  @controllers.RatingController.updateRating(id: Int)
+POST          /rating                      @controllers.RatingController.createRating
 
 #Restaurants
 GET            /restaurants                @controllers.RestaurantController.all()

@@ -1,6 +1,6 @@
 package repositories
 
-import models.Rating
+import models.{Restaurant, Rating}
 
 import scala.concurrent.Future
 
@@ -12,9 +12,10 @@ trait RatingRepository {
   /**
    * create/update a rating
    * @param rating
+   * @param userId
    * @return
    */
-  def save(rating: Rating): Future[Rating]
+  def save(rating: Rating, userId: Int): Future[Rating]
 
   /**
    * find all ratings from one restaurant
@@ -24,18 +25,32 @@ trait RatingRepository {
   def readAllRatingsFromOneRestaurant(restaurantId: Int):Future[Seq[Rating]]
 
   /**
-   * find all ratings from one user
+   * find top 6 restaurants from one user
    * @param userId
    * @return
    */
-  def readAllRatingsFromOneUser(userId: Int):Future[Seq[Rating]]
+  def readTop6RatingsFromOneUser(userId: Int):Future[Seq[Restaurant]]
 
   /**
-   * delete an existing rating
-   * @param ratingId
+   * find top 6 restaurants
    * @return
    */
-  def delete(ratingId: Int):Future[Unit]
+  def readTop6Ratings():Future[Seq[Restaurant]]
+
+  /**
+   * find one rating from one user
+   * @param ratingId
+   * @param userId
+   * @return
+   */
+  def readOneRatingsFromOneUser(ratingId: Int, userId: Int):Future[Option[Rating]]
+
+  /** *
+    * delete all ratings from one user
+    * @param userId
+    * @return
+    */
+  def deleteRatingFromUser(userId: Int):Future[Unit]
 
   /**
    * find existing rating by id
@@ -43,5 +58,20 @@ trait RatingRepository {
    * @return
    */
   def find(ratingId: Int):Future[Option[Rating]]
+
+  /**
+   * calculate the rating of a restaurant
+   * @param restaurantID
+   * @return
+   */
+  def calcRatingForRestaurant(restaurantID: Int):Future[Double]
+
+  /**
+   * update the rating of a restaurant
+   * @param restaurant
+   * @param rating
+   */
+  def updateRatingOfRestaurant(restaurant: Restaurant, rating: Double):Future[Restaurant]
+
 
 }
