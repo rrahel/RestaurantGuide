@@ -52,5 +52,20 @@ class CategoryRepoSpec extends PlaySpec with ScalaFutures{
 
     }
    }
+
+   "list all categories" in new SecurityTestContext {
+     new WithApplication(application) {
+       val categoryRepo = app.injector.instanceOf[CategoryRepository]
+       categoryRepo.all().futureValue.length mustBe 0
+       val category = categoryRepo.create(Category(None, "Category1")).futureValue
+       val category1 = categoryRepo.create(Category(None, "Category2")).futureValue
+
+       val categories = categoryRepo.all().futureValue
+       categories.length mustBe 2
+       categories(0).name mustBe "Category1"
+       categories(1).name mustBe "Category2"
+
+     }
+   }
 }
 }
