@@ -88,7 +88,7 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
         val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
-        val deleteCommentString = "/commentA/" + testComment.id.get
+        val deleteCommentString = "/comment/admin/" + testComment.id.get
         val deleteCommentResponse = route(FakeRequest(DELETE, deleteCommentString)
           .withAuthenticator[JWTAuthenticator](identity.loginInfo)).get
         status(deleteCommentResponse) must be(OK)
@@ -108,7 +108,7 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
         val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
-        val deleteCommentString = "/commentA/" + testComment.id.get
+        val deleteCommentString = "/comment/admin/" + testComment.id.get
         val deleteCommentResponse = route(FakeRequest(DELETE, deleteCommentString)
           .withAuthenticator[JWTAuthenticator](identity.loginInfo)).get
         status(deleteCommentResponse) must be(FORBIDDEN)
@@ -215,8 +215,6 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
         contentType(changeCommentResponse) mustBe Some("application/json")
         val comment = contentAsJson(changeCommentResponse).as[Comment]
         comment.content mustBe changeComment.content
-        val foundComments = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get,0,5).futureValue
-        foundComments.length mustBe 1
       }
     }
 
@@ -251,6 +249,28 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
           .withSession("csrfToken"->token2)
         ).get
         status(updateCommentResponse) must be(BAD_REQUEST)
+
+      }
+    }
+
+    "find one specifc comment" in new RepositoryAwareContext {
+      new WithApplication(application) {
+        val userRepo = app.injector.instanceOf[UserRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val commentRepo = app.injector.instanceOf[CommentRepository]
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val comment = commentRepo.save(Comment(None, "TestComment", insertedUser.id.get, restaurant1.id.get),insertedUser.id.get).futureValue
+        val foundCommentString = "/comment/" + comment.id.get
+        val foundCommentReponse = route(FakeRequest(GET, foundCommentString)
+          .withAuthenticator[JWTAuthenticator](identity.loginInfo)
+        ).get
+        status(foundCommentReponse) must be(OK)
+        contentType(foundCommentReponse) mustBe Some("application/json")
+        val foundComment = contentAsJson(foundCommentReponse).as[Comment]
+        foundComment.content mustBe comment.content
 
       }
     }

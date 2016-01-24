@@ -111,7 +111,7 @@ class RatingControllerSpec extends PlaySpec with ScalaFutures {
         val testRating5 = ratingRepo.save(Rating(None, 5, insertedUser.id.get,createdRestaurants.tail.tail.tail.tail.head.id.get),insertedUser.id.get).futureValue
         val testRating6 = ratingRepo.save(Rating(None, 6, insertedUser.id.get,createdRestaurants.tail.tail.tail.tail.tail.head.id.get),insertedUser.id.get).futureValue
         val testRating7 = ratingRepo.save(Rating(None, 7, insertedUser.id.get,createdRestaurants.tail.tail.tail.tail.tail.tail.head.id.get),insertedUser.id.get).futureValue
-        val listTopResponse = route(FakeRequest(GET, "/favorites")
+        val listTopResponse = route(FakeRequest(GET, "/rating/favorites")
           .withAuthenticator[JWTAuthenticator](identity.loginInfo)).get
         status(listTopResponse) must be(OK)
         contentType(listTopResponse) mustBe Some("application/json")
@@ -132,7 +132,7 @@ class RatingControllerSpec extends PlaySpec with ScalaFutures {
         val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
         Future.sequence(createTestRestaurantsWithRating(10,category.id.get).map(restaurantRepo.create)).futureValue
         restaurantRepo.count().futureValue must be(10)
-        val listTopResponse = route(FakeRequest(GET, "/topRestaurants")
+        val listTopResponse = route(FakeRequest(GET, "/rating/top")
           ).get
         status(listTopResponse) must be(OK)
         contentType(listTopResponse) mustBe Some("application/json")

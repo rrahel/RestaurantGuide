@@ -44,6 +44,18 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/addRestaurant',
     templateUrl: 'views/addrestaurant.html'
     controller: 'AddrestaurantCtrl'
+  .when '/addComments',
+    templateUrl: 'views/addcomments.html'
+    controller: 'AddcommentsCtrl'
+    controllerAs: 'addComments'
+  .when '/updateComment',
+    templateUrl: 'views/updatecomment.html'
+    controller: 'UpdatecommentCtrl'
+    controllerAs: 'updateComment'
+  .when '/deleteComment',
+    templateUrl: 'views/deletecomment.html'
+    controller: 'DeletecommentCtrl'
+    controllerAs: 'deleteComment'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>
@@ -81,7 +93,7 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   $authProvider.platform = 'browser'
   $authProvider.storage = 'localStorage'
 
-  ###
+
   # Facebook
   $authProvider.facebook({
    clientId: '1503078423241610',

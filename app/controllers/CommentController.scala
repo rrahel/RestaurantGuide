@@ -74,5 +74,13 @@ class CommentController @Inject()(commentRepository: CommentRepository,
     }
   }
 
+  // for updating comment
+  def readComment(commentId: Int) = SecuredAction.async {
+    commentRepository.find(commentId).map {
+      case Some(c) => Ok(Json toJson c)
+      case None => NotFound(Json.obj("message"->s"Comment with id=$commentId was not found"))
+    }
+  }
+
 
 }
