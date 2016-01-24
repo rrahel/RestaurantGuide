@@ -31,6 +31,11 @@ class CommentController @Inject()(commentRepository: CommentRepository,
       .map(c => Ok(Json toJson c))
   }
 
+  // list all comments from the logged in user -> to show the update/delete button in the frontend
+  def listAllCommentsFromOneUser() = SecuredAction.async {
+    implicit request => commentRepository.readAllCommentsFromOneUser(request.identity.id.get).map(c => Ok(Json toJson c))
+  }
+
   // only admins can delete all comments
   def deleteCommentAsAdmin(commentId: Int) = SecuredAction(IsAdmin()).async {
     commentRepository.delete(commentId).map(d => Ok(Json.obj("message" -> "Comment was successfully deleted")))

@@ -50,6 +50,32 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
 
+    "return a list with all comments from the logged in user" in new RepositoryAwareContext {
+      new WithApplication(application) {
+        val userRepo = app.injector.instanceOf[UserRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val commentRepo = app.injector.instanceOf[CommentRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant2 = restaurantRepo.create(Restaurant(None, "Restaurant2",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val insertedUser2 = userRepo.save(User(None, "Jane", "Miller", "jm@test.com", "test2", "test2")).futureValue
+        val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
+        val newComment2 = Comment(None, "testComment2", insertedUser2.id.get, restaurant2.id.get)
+        val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
+        val testComment2 = commentRepo.save(newComment2, insertedUser2.id.get).futureValue
+        val listAllResponse = route(FakeRequest(GET, "/comments")
+          .withAuthenticator[JWTAuthenticator](identity.loginInfo)).get
+        status(listAllResponse) must be(OK)
+        contentType(listAllResponse) mustBe Some("application/json")
+        val json = contentAsJson(listAllResponse)
+        val comments = Json.fromJson[List[Comment]](json).get
+        comments.length mustBe 1
+        comments.head.content mustBe testComment.content
+      }
+    }
+
     "allow admins to delete comments" in new RepositoryAwareContext {
       override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
       new WithApplication(application) {
