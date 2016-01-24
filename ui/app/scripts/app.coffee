@@ -17,7 +17,8 @@ app = angular
     'ngSanitize',
     'ngTouch',
     'ngQuantum',
-    'satellizer'
+    'satellizer',
+    'ui.bootstrap'
   ])
 
 app.run ($rootScope)->
