@@ -175,7 +175,7 @@ aside {
 header {
   position: relative;
   width: 100%;
-  min-height: auto;
+ /* min-height: auto;*/
   text-align: center;
   color: #fff;
   background-image: url(../images/header.jpg);
@@ -479,4 +479,10 @@ body {
 .header-content-inner .portfolio-box {
   margin-right: 20px;
   margin-bottom: 20px;
+}
+
+.footer-section {
+  padding: 1em 0;
+  background: #222;
+  text-align: center;
 }

@@ -36,9 +36,17 @@ POST          /rating                      @controllers.RatingController.createR
 
 #Restaurants
 GET            /restaurants                @controllers.RestaurantController.all()
-GET            /restaurants/count          @controllers.RestaurantController.count()
 POST           /restaurants                @controllers.RestaurantController.create()
+GET            /restaurants                @controllers.RestaurantController.allWithPages(page:Option[Int],size:Option[Int])
+GET            /restaurants/count          @controllers.RestaurantController.count()
+DELETE         /restaurants/:id            @controllers.RestaurantController.deleteRestaurant(id: Int)
 GET            /restaurants/:id            @controllers.RestaurantController.findResById(id: Int)
+
+#Categories
+GET             /categories                @controllers.CategoryController.all()
+POST            /categories                @controllers.CategoryController.create()
+#GET             /categories/:id            @controllers.CategoryController.find(id: Int)
+DELETE          /categories/:id            @controllers.CategoryController.delete(id: Int)
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                controllers.Assets.at(path="/public", file)
 

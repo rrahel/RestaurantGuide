@@ -37,6 +37,13 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/listUsers',
     templateUrl: 'views/listusers.html'
     controller: 'ListusersCtrl'
+  .when '/addcategory',
+    templateUrl: 'views/addcategory.html'
+    controller: 'AddcategoryCtrl'
+    controllerAs: 'addcategory'
+  .when '/addRestaurant',
+    templateUrl: 'views/addrestaurant.html'
+    controller: 'AddrestaurantCtrl'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>
