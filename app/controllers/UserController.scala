@@ -68,6 +68,21 @@ class UserController @Inject()(val messagesApi: MessagesApi,
   def count = SecuredAction(IsAdmin()
   ).async(implicit request => userRepository.count.map(count => Ok(Json toJson count)))
 
+
+
+  def update = SecuredAction.async(parse.json) {
+    implicit request => userRepository.find(request.identity.id.get).flatMap{
+      case Some(u) => request.body.validate[User].map{
+        user => userRepository.save(user).map(u => Ok(Json toJson u))
+      }.recoverTotal{
+        case error => Future.successful(BadRequest(Json.obj("message" -> "Error while updating")))
+      }
+      case None => Future.successful(BadRequest(Json.obj("message" -> "User was not found")))
+    }
+  }
+
+
+
   def save = SecuredAction(IsAdmin()).async(parse.json) { implicit request =>
     request.body.validate[SignUpInfo].map { data =>
       val loginInfo = LoginInfo(CredentialsProvider.ID, data.email)

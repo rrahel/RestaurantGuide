@@ -50,6 +50,9 @@ class CategoryRepositorySlickImpl extends CategoryRepository with HasDatabaseCon
     }
   }
 
+  override def allByCategory(categoryId: Int): Future[Seq[Restaurant]] =
+    db.run(restaurants.filter(_.category === categoryId).result)
+
   override def find(categoryId: Int): Future[Seq[Restaurant]] =
     db.run(restaurants.filter(_.category === categoryId).result)
 
@@ -62,4 +65,8 @@ class CategoryRepositorySlickImpl extends CategoryRepository with HasDatabaseCon
   }
 
   override def all(): Future[Seq[Category]] = db.run(allQuery.result)
+
+  override def count(categoryId: Int): Future[Int] = {
+    db.run(restaurants.filter(_.category === categoryId).length.result)
+  }
 }

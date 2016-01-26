@@ -23,6 +23,10 @@ trait CategoryRepository {
 
   def all():Future[Seq[Category]]
 
+  def allByCategory(categoryId: Int): Future[Seq[Restaurant]]
+
+  def count(categoryId: Int):Future[Int]
+
 
 
 
