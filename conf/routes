@@ -17,6 +17,7 @@ GET           /signout                     @controllers.SecurityController.signO
 GET           /user                        @controllers.UserController.list
 POST          /user                        @controllers.UserController.save
 GET           /user/count                  @controllers.UserController.count
+POST          /user/update                 @controllers.UserController.update
 GET           /user/pages/:page/:pageSize  @controllers.UserController.listWithPages(page:Int, pageSize:Int)
 DELETE        /user/:id                    @controllers.UserController.delete(id: Int)
 
@@ -42,6 +43,7 @@ GET            /restaurants                @controllers.RestaurantController.all
 GET            /restaurants/count          @controllers.RestaurantController.count()
 DELETE         /restaurants/:id            @controllers.RestaurantController.deleteRestaurant(id: Int)
 GET            /restaurants/:id            @controllers.RestaurantController.findResById(id: Int)
+GET            /restaurants/:name          @controllers.RestaurantController.findRestByName(name: String)
 
 #Categories
 GET             /categories                @controllers.CategoryController.all()

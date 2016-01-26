@@ -124,8 +124,23 @@ class RestaurantRepoSpec extends PlaySpec with ScalaFutures{
         restaurantRepo.all().futureValue.length mustBe 1
         restaurantRepo.find(1).futureValue mustBe None
 
+      }
+    }
 
+    "find restaurants by name" in new SecurityTestContext {
+      new WithApplication(application) {
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
 
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant2 = restaurantRepo.create(Restaurant(None,"Restaurant2",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant3 = restaurantRepo.create(Restaurant(None, "Restaurant3",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+
+        val restaurants = restaurantRepo.findResByName(restaurant1.name).futureValue
+        restaurants.length mustBe 1
+        val restaurants1 = restaurantRepo.findResByName("Rest").futureValue
+        restaurants1.length mustBe 3
       }
     }
 

@@ -28,8 +28,8 @@ class CommentRepositorySlickImpl extends CommentRepository with HasDatabaseConfi
    */
   override def save(comment: Comment, userId: Int): Future[Comment] = {
     val existingCommentFuture = comment.id match {
-      case None => Future.successful(None)
-      case Some(id) => find(id)
+        case None => Future.successful(None)
+        case Some(id) => find(id)
     }
     existingCommentFuture.flatMap {
       case None =>

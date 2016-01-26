@@ -64,4 +64,8 @@ class RestaurantController @Inject()(restaurantRepository: RestaurantRepository,
     restaurantRepository.delete(resId).map(_ => Ok(Json obj "message" -> s"Restaurant was successfully deleted"))
   }
 
+  def findRestByName(name: String) =  Action.async {
+    restaurantRepository.findResByName(name).map(c => Ok(Json toJson c))
+  }
+
 }

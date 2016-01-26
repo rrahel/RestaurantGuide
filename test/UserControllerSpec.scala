@@ -76,6 +76,26 @@ class UserControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
 
+    "update own profile" in new SecurityTestContext {
+      new WithApplication(application) {
+        val userRepo = app.injector.instanceOf[UserRepository]
+        val testUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val updatedUser = User(testUser.id,"Jimmy", "Johnson", "jd@test.com", "test", "test")
+        val token = CSRF.SignedTokenProvider.generateToken
+        val updatedUserResponse = route(FakeRequest(POST,  "/user/update")
+          .withAuthenticator[JWTAuthenticator](identity.loginInfo)
+          .withJsonBody(Json.toJson(updatedUser))
+          .withHeaders("Csrf-Token" -> token)
+          .withSession("csrfToken" -> token)
+        ).get
+        status(updatedUserResponse) must be(OK)
+        contentType(updatedUserResponse) mustBe Some("application/json")
+        val user = contentAsJson(updatedUserResponse).as[User]
+        user.firstname mustBe updatedUser.firstname
+        user.lastname mustBe updatedUser.lastname
+      }
+    }
+
     "create a user if the current user is an admin" in new SecurityTestContext {
       override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com",Set("USER","ADMINISTRATOR"))
       new WithApplication(application) {
