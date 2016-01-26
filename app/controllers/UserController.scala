@@ -12,7 +12,7 @@ import play.api.mvc.{Action, Request}
 import _root_.repositories.UserRepository
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
-import models.{SignUpInfo, User}
+import models.{UserPreview, SignUpInfo, User}
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import models.UserPreview._
@@ -52,6 +52,13 @@ class UserController @Inject()(val messagesApi: MessagesApi,
   case class IsAdmin() extends Authorization[User, JWTAuthenticator] {
     override def isAuthorized[B](identity: User, authenticator: JWTAuthenticator)(implicit request: Request[B], messages: Messages): Future[Boolean] =
       Future.successful(identity.roles.contains("ADMINISTRATOR"))
+  }
+
+  def find(id: Int) = Action.async {
+    userRepository.find(id).map {
+      case Some(user) => Ok(Json.toJson(user))
+      case None => NotFound(Json obj "message" -> s"User was not found")
+    }
   }
 
   def list = SecuredAction(IsAdmin()

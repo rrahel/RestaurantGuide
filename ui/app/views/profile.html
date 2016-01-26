@@ -1,24 +1,21 @@
-<p>This is the profile view.</p>
-<form novalidate name="profileForm" class="css-form">
-  <fieldset>
-    <div class="form-profile">
-      <label for="firstname" class="control-label">Firstname: </label>
-      <input type="text" class="form-control" id="firstname"
-             data-ng-model="user.name" required name="name" placeholder="Change your firstname"/>
-    </div>
-    <div class="form-profile">
-      <label for="lastname" class="control-label">Lastname: </label>
-      <input type="text" class="form-control" id="lastname"
-             data-ng-model="user.name" required name="name" placeholder="Change your lastname"/>
-    </div><div class="form-profile">
-    <label  class="control-label">Email: </label>
+<form name="profileForm" class="css-form">
 
+  <div class="form-group">
+    <label for="firstname">Firstname: {{user.firstname}}</label>
+    <input type="text" id="firstname" name="firstname" data-ng-model="firstnameUpdate" placeholder="Change your firstname" />
   </div>
-  </fieldset>
-  <div class="btn-toolbar">
-    <button class="btn btn-primary" data-ng-click="save()"
-            data-ng-disabled="categoryForm.$invalid">Update
-    </button>
-    <a href="#/" class="btn btn-default">Cancel</a>
+
+  <div class="form-group">
+    <label for="lastname">Lastname: {{user.lastname}}</label>
+    <input type="text" name="lastname" id="lastname" data-ng-model="lastnameUpdate" placeholder="Change your lastname" />
+
+    </div>
+
+  <button type="submit" class="btn btn-danger" ng-click="update()">Submit</button>
+  <div class="form-group">
+    <label>Email: {{user.email}}</label>
   </div>
+  </div>
+
+
 </form>
