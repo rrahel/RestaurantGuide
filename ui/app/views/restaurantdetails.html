@@ -1,2 +1,30 @@
-<h1>TESTTEST</h1>
-<p>{{restaurant}}</p>
+<h1>{{restaurant.name}}</h1>
+<p>{{restaurant.description}}</p>
+
+<p>{{restaurant.rating}}</p>
+<form novalidate name="rateForm" class="css-form">
+    <fieldset>
+        <select data-ng-model="newRate" id="rate">
+            <option value=0.0>0</option>
+            <option value=1.0>1</option>
+            <option value=2.0>2</option>
+            <option value=3.0>3</option>
+            <option value=4.0>4</option>
+            <option value=5.0>5</option>
+        </select>
+    </fieldset>
+    <div class="btn-toolbar">
+        <button class="btn btn-primary" data-ng-click="rate()"
+                data-ng-disabled="rateForm.$invalid">Rate!
+        </button>
+    </div>
+</form>
+
+<h2>Contact:</h2>
+<p>PhoneNumber: <a href="tel:{{restaurant.phone}}">{{restaurant.phone}}</a></p>
+<p>E-Mail: <a href="mailto:{{restaurant.email}}">{{restaurant.email}}</a></p>
+<p>Website: <a href="http://{{restaurant.website}}">{{restaurant.website}}</a></p>
+
+<h2>Address:</h2>
+<p>{{restaurant.street}}</p>
+<p>{{restaurant.zip}} {{restaurant.city}}</p>
