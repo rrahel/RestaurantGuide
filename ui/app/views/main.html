@@ -1,4 +1,5 @@
   <div class="header-content" id="top6">
+
     <div class="header-content-inner">
       <h1>Top Restaurants</h1>
       <hr>
@@ -247,7 +248,7 @@
 </section>
 
 
-<section id="login">
+<section id="login" data-is-not-authenticated>
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2 text-center">
@@ -256,14 +257,14 @@
       </div>
 
       <!-- Sign in form -->
-      <div class="container">
+      <div class="container" >
         <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
           <div class="panel panel-info" >
             <div class="panel-heading">
               <div class="panel-title">Sign In</div>
             </div>
 
-            <div style="padding-top:30px" class="panel-body" >
+            <div style="padding-top:30px" class="panel-body" data-ng-controller="SigninCtrl" >
 
               <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
 
@@ -299,7 +300,7 @@
                 <div style="margin-top:10px" class="form-group">
                   <!--Submit login button -->
                   <div class="col-sm-12 controls">
-                    <button id="btn-login" type="submit" class="btn btn-lg btn-primary btn-block" ng-click="singIn()">Login </button>
+                    <button id="btn-login" type="submit" class="btn btn-lg btn-primary btn-block" ng-click="signIn()">Login </button>
 
                   </div>
                 </div>
@@ -308,7 +309,7 @@
                   <div class="col-md-12 control">
                     <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
                       Don't have an account!
-                      <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show()">
+                      <a href="#/signup">
                         Sign Up Here
                       </a>
                     </div>

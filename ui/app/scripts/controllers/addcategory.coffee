@@ -8,8 +8,8 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'AddcategoryCtrl', ($scope,Categories,$location) ->
-   $scope.category = new Categories()
+  .controller 'AddcategoryCtrl', ($scope,CategoryFactory,$location) ->
+   $scope.category = new CategoryFactory()
    $scope.save = ->
      $scope.category.$save()
      .then -> $location.path "/"

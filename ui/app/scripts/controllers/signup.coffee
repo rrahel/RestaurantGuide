@@ -9,7 +9,9 @@
 ###
 angular.module('uiApp')
   .controller 'SignUpCtrl', ($scope,$http,$rootScope,$auth,$alert) ->
+    $scope.error = null
     $scope.signUpInfo = {}
+
     $scope.signUp = ->
       $auth.signup($scope.signUpInfo)
       .then ->
@@ -19,4 +21,6 @@ angular.module('uiApp')
         $rootScope.$broadcast "userChanged"
         $alert("Welcome #{$rootScope.user.firstname}!","Success!", 'success', 'top-left')
       .catch (err) ->
-        $alert(err.data.message,'You could not be registered!', 'danger', 'top-right')
+        $scope.error = if err.data? then err.data.message else err
+        $alert("There went something wrong!","Error!", 'danger', 'top-left')
+
