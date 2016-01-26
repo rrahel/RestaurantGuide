@@ -53,6 +53,7 @@ class CategoryRepositorySlickImpl extends CategoryRepository with HasDatabaseCon
   override def find(categoryId: Int): Future[Seq[Restaurant]] =
     db.run(restaurants.filter(_.category === categoryId).result)
 
+
  override def delete(categoryId: Int): Future[Unit] = {
     val delQuery = for{
       categoryDel <- categories.filter(_.id === categoryId).delete
