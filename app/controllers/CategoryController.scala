@@ -42,12 +42,10 @@ class CategoryController @Inject()(categoryRepository: CategoryRepository,
   def delete(catId: Int) = SecuredAction(IsAdmin()).async{
     categoryRepository.delete(catId).map(_ => Ok(Json obj "message" -> s"Category was successfully deleted"))
   }
-  /*  def find(catId:Int) = Action.async {
-      categoryRepository.find(catId)
-        .map { case Some(res) => Ok(Json.toJson(res))
-        case None => NotFound(Json obj "message" -> s"Category with id=$catId was not found")
-        }
-    }*/
+
+  def find(catId:Int) = Action.async {
+    categoryRepository.find(catId).map(c => Ok(Json toJson c))
+  }
 
 
 }
