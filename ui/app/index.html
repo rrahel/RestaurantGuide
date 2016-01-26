@@ -72,7 +72,12 @@
                 <li>
                     <a class="page-scroll" href="#/signup" is-not-authenticated>Register</a>
                 </li>
-                <li><a ng-href="#/" ng-click="logout()" is-authenticated>Logout</a></li>
+                <li>
+                  <a ng-href="#/" ng-click="logout()" is-authenticated>Logout</a>
+                </li>
+                <li>
+                  <a  href="#/profile" is-authenticated>Profile</a>
+                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -175,6 +180,7 @@
 <script src="scripts/controllers/updatecomment.js"></script>
 <script src="scripts/controllers/deletecomment.js"></script>
 <script src="scripts/services/categoryfactory.js"></script>
+<script src="scripts/controllers/profile.js"></script>
 <!-- endbuild -->
 
 
