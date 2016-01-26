@@ -42,6 +42,7 @@ GET            /restaurants                @controllers.RestaurantController.all
 GET            /restaurants/count          @controllers.RestaurantController.count()
 DELETE         /restaurants/:id            @controllers.RestaurantController.deleteRestaurant(id: Int)
 GET            /restaurants/:id            @controllers.RestaurantController.findResById(id: Int)
+GET            /restaurants/:name          @controllers.RestaurantController.findRestByName(name: String)
 
 #Categories
 GET             /categories                @controllers.CategoryController.all()

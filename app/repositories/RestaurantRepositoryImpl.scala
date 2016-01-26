@@ -16,7 +16,7 @@ import slick.lifted.TableQuery
 import slick.driver.H2Driver.api._
 import scala.concurrent.Future
 
-class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConfig[JdbcProfile]{
+class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConfig[JdbcProfile] {
   //get the number of all restaurants
   override def count(): Future[Int] = db.run(restaurants.length.result)
 
@@ -29,11 +29,11 @@ class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConf
 
   //delete a restaurant
   override def delete(restaurantId: Int): Future[Unit] = {
-    val delQuery = for{
+    val delQuery = for {
       restaurantRatingsDel <- ratings.filter(_.restaurantId === restaurantId).delete
       restaurantCommentsDel <- comments.filter(_.restaurantId === restaurantId).delete
       restaurantDel <- restaurants.filter(_.id === restaurantId).delete
-    }yield (restaurantCommentsDel, restaurantDel)
+    } yield (restaurantCommentsDel, restaurantDel)
     db.run(delQuery).map(_ => {})
   }
 
@@ -47,24 +47,24 @@ class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConf
       case None => Future.successful(None)
       case Some(id) => find(id)
     }
-    existingRestaurantFuture.flatMap{
+    existingRestaurantFuture.flatMap {
       case None => db.run(
         (restaurants returning restaurants.map(_.id)
-          into((restaurant, id)=> restaurant.copy(id = Some(id)))) += restaurant
+          into ((restaurant, id) => restaurant.copy(id = Some(id)))) += restaurant
       )
       case Some(_) => db.run(
-      for{
-        updateRestaurant <- restaurants.filter(_.id === restaurant.id).update(restaurant)
-      }yield restaurant
+        for {
+          updateRestaurant <- restaurants.filter(_.id === restaurant.id).update(restaurant)
+        } yield restaurant
       )
 
     }
   }
 
-  //find restaurants by the category
-  override def findResByCat(catId: Int): Future[Some[Restaurant]] = ???
-
-
+  //find restaurants by the name
+  override def findResByName(name: String): Future[Seq[Restaurant]] =
+    db.run(
+      restaurants.filter(_.name.like(s"%${name}%")).result)
 
 
   override protected val dbConfig = DatabaseConfigProvider.get[JdbcProfile](Play.current)
@@ -72,5 +72,7 @@ class RestaurantRepositoryImpl extends RestaurantRepository with HasDatabaseConf
   val comments = TableQuery[Comments]
   val ratings = TableQuery[Ratings]
   private val allQuery = restaurants.sortBy(r => (r.name.asc))
+
+
 
 }
