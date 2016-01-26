@@ -173,17 +173,19 @@ aside {
 }
 
 header {
-  /*position: relative;
+  position: relative;
   width: 100%;
- /!* min-height: auto;*!/
+  /*
+  min-height: auto;
+  */
   text-align: center;
-  color: #fff;*/
+  color: #000;
   background-image: url(../images/header.jpg);
-  /*background-position: center;*/
+  background-position: center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
-  /*-o-background-size: cover;*/
+  -o-background-size: cover;
 }
 
 header .header-content {
@@ -476,9 +478,26 @@ body {
   webkit-tap-highlight-color: #222;
 }
 
+.footer-section {
+  padding: 1em 0;
+  background: #222;
+  text-align: center;
+}
+
+.alert-container{
+  position: absolute;
+  bottom: 1%;
+  left: 50%;
+}
+
 .header-content-inner .portfolio-box {
   margin-right: 20px;
   margin-bottom: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+.header-content-inner {
+  padding: 0 200px;
 }
 
 .footer-section {
@@ -488,7 +507,15 @@ body {
 }
 
 .alert-container{
-    position: absolute;
-    bottom: 1%;
-    left: 50%;
+  position: absolute;
+  bottom: 1%;
+  left: 50%;
+}
+
+section.general {
+  padding: 350px 0;
+
+  text-align: left;
+  padding-left: 450px;
+  padding-right: 550px;
 }
