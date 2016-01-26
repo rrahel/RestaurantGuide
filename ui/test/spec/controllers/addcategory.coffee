@@ -21,19 +21,20 @@ describe 'Controller: AddcategoryCtrl', ->
 
 
   it 'should create a new category and go to the start page if successful', ->
-    scope.group = angular.extend scope.category,category
+    scope.category = angular.extend scope.category,category
     $location.path "/addcategory"
-    $httpBackend.expectPOST("/restaurants",category).respond 200
+    $httpBackend.expectPOST("/categories",category).respond 200
     scope.save()
     $httpBackend.flush()
     expect($location.path()).toBe "/"
 
 
   it "should provide an error message if creation fails", ->
-    scope.group = angular.extend scope.category,category
+    scope.category = angular.extend scope.category,category
     $location.path "/addcategory"
-    $httpBackend.expectPOST("/restaurants",category).respond 500,message: "An Error occured!"
+    $httpBackend.expectPOST("/categories",category).respond 500,message: "An Error occured!"
     scope.save()
     $httpBackend.flush()
     expect($location.path()).toBe "/addcategory"
     expect(scope.error).toBe "An Error occured!"
+

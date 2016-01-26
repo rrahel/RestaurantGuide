@@ -173,17 +173,17 @@ aside {
 }
 
 header {
-  position: relative;
+  /*position: relative;
   width: 100%;
- /* min-height: auto;*/
+ /!* min-height: auto;*!/
   text-align: center;
-  color: #fff;
+  color: #fff;*/
   background-image: url(../images/header.jpg);
-  background-position: center;
+  /*background-position: center;*/
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
-  -o-background-size: cover;
+  /*-o-background-size: cover;*/
 }
 
 header .header-content {
@@ -485,4 +485,10 @@ body {
   padding: 1em 0;
   background: #222;
   text-align: center;
+}
+
+.alert-container{
+    position: absolute;
+    bottom: 1%;
+    left: 50%;
 }
