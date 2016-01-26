@@ -8,9 +8,8 @@
  # Controller of the uiApp
 ###
 angular.module('uiApp')
-  .controller 'MainCtrl', ($scope) ->
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate'
-      'AngularJS'
-      'Karma'
-    ]
+  .controller 'MainCtrl', ($scope, $http) ->
+    $scope.categories = []
+    $http.get('/categories')
+    .then (resp) ->
+      $scope.categories = resp.data
