@@ -80,6 +80,20 @@ class UserRepositorySpec extends PlaySpec with ScalaFutures {
         allUsers.length must be(10)
       }
     }
+
+    "update existing profile" in new SecurityTestContext {
+      new WithApplication(application) {
+        val userRepo = app.injector.instanceOf[UserRepository]
+        val testUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val updatedUser = User(testUser.id,"Jimmy", "Johnson", "jd@test.com", "test", "test")
+        val testUpdateUser = userRepo.save(updatedUser).futureValue
+        testUpdateUser.firstname mustBe updatedUser.firstname
+        testUpdateUser.lastname mustBe updatedUser.lastname
+      }
+    }
+
+
+
     "delete a user" in new SecurityTestContext {
       new WithApplication(application) {
         val userRepo = app.injector.instanceOf[UserRepository]
