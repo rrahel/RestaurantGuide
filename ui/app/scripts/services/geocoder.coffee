@@ -15,8 +15,8 @@ angular.module 'uiApp'
     geocoder.geocode address: address, (results, status) ->
       if status == google.maps.GeocoderStatus.OK
         deferred.resolve(
-          lat:results[0].geometry.location.lat(),
-          lng:results[0].geometry.location.lng()
+          lat: -> results[0].geometry.location.lat()
+          lng: -> results[0].geometry.location.lng()
         )
       else deferred.reject "Could not geocode your address"
     deferred.promise

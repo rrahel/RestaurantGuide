@@ -57,6 +57,18 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
     templateUrl: 'views/deletecomment.html'
     controller: 'DeletecommentCtrl'
     controllerAs: 'deleteComment'
+  .when '/restaurantDetails',
+    templateUrl: 'views/restaurantdetails.html'
+    controller: 'RestaurantdetailsCtrl'
+    controllerAs: 'restaurantDetails'
+  .when '/listRestaurants',
+    templateUrl: 'views/listrestaurants.html'
+    controller: 'ListrestaurantsCtrl'
+    controllerAs: 'listRestaurants'
+  .when '/listCategories',
+    templateUrl: 'views/listcategories.html'
+    controller: 'ListcategoriesCtrl'
+    controllerAs: 'listCategories'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>

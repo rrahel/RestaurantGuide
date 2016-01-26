@@ -44,8 +44,11 @@ class CategoryController @Inject()(categoryRepository: CategoryRepository,
   }
 
   def find(catId:Int) = Action.async {
-    categoryRepository.find(catId).map(c => Ok(Json toJson c))
+    categoryRepository.allByCategory(catId).map(c => Ok(Json toJson c))
   }
 
+  def count(catId:Int) = Action.async {
+    categoryRepository.count(catId).map(c => Ok(Json toJson c))
+  }
 
 }
