@@ -188,6 +188,12 @@ header {
   -o-background-size: cover;
 }
 
+.detail{
+  position: absolute !important;
+  /*bottom: 0 !important;
+  left: 0 !important;*/
+}
+
 header .header-content {
   position: relative;
   width: 100%;
@@ -478,18 +484,6 @@ body {
   webkit-tap-highlight-color: #222;
 }
 
-.footer-section {
-  padding: 1em 0;
-  background: #222;
-  text-align: center;
-}
-
-.alert-container{
-  position: absolute;
-  bottom: 1%;
-  left: 50%;
-}
-
 .header-content-inner .portfolio-box {
   margin-right: 20px;
   margin-bottom: 20px;
@@ -501,21 +495,28 @@ body {
 }
 
 .footer-section {
-  padding: 1em 0;
+  position:absolute;
+  padding: 0.8em 0 0.1em 0;
   background: #222;
   text-align: center;
+  width: 100%;
+}
+
+#footer-adapted {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .alert-container{
   position: absolute;
-  bottom: 1%;
+  bottom: 0;
   left: 50%;
 }
 
 section.general {
-  padding: 350px 0;
-
+  padding: 12% 0;
   text-align: left;
-  padding-left: 450px;
-  padding-right: 550px;
+  padding-left: 10%;
+  padding-right: 50%;
 }

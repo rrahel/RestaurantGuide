@@ -1,29 +1,29 @@
-<header>
+<header class="detail">
   <section class="general">
-  <div>
-  <div class="panel">
-    <div class="panel-heading">
-      <h3 class="panel-title">Add a new category</h3>
-    </div>
-    <div class="panel-body">
-      <div class="alert alert-danger" data-ng-bind="error" data-ng-show="error"></div>
-      <form novalidate name="categoryForm" class="css-form">
-        <fieldset>
-          <div class="form-category">
-            <label for="name" class="control-label">Name</label>
-            <input type="text" class="form-control" id="name"
-                   data-ng-model="category.name" required name="name" placeholder="Name of the new category"/>
-          </div>
-        </fieldset>
-        <div class="btn-toolbar">
-          <button class="btn btn-primary" data-ng-click="save()"
-                  data-ng-disabled="categoryForm.$invalid">Save
-          </button>
-          <a href="#/" class="btn btn-default">Cancel</a>
+      <div>
+      <div class="panel">
+        <div class="panel-heading">
+          <h3>Add a new category</h3>
         </div>
-      </form>
+        <div class="panel-body">
+          <div class="alert alert-danger" data-ng-bind="error" data-ng-show="error"></div>
+          <form novalidate name="categoryForm" class="css-form">
+            <fieldset>
+              <div class="form-category">
+                <label for="name" class="control-label">Name</label>
+                <input type="text" class="form-control" id="name"
+                       data-ng-model="category.name" required name="name" placeholder="Name of the new category"/>
+              </div>
+            </fieldset>
+            <div class="btn-toolbar">
+              <button class="btn btn-primary" data-ng-click="save()"
+                      data-ng-disabled="categoryForm.$invalid">Save
+              </button>
+              <a href="#/" class="btn btn-default">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
-    </section>
+  </section>
 </header>

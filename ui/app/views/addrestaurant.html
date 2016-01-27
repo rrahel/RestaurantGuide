@@ -1,9 +1,9 @@
-<header>
+<header class="detail">
   <section class="general">
   <div>
   <div class="panel">
     <div class="panel-heading">
-      <h3 class="panel-title">Add a new Restaurant</h3>
+      <h3>Add a new Restaurant</h3>
     </div>
     <div class="panel-body">
       <div class="alert alert-danger" data-ng-bind="error" data-ng-show="error"></div>
@@ -22,9 +22,18 @@
           </div>
           <div class="form-group">
             <label for="category" class="control-label">Category</label>
-            <input type="number" class="form-control" id="category"
-                   data-ng-model="restaurant.category" name="category" placeholder="Category of the new Restaurant"/>
+            <!--<input type="number" class="form-control" id="category"
+                   data-ng-model="restaurant.category" name="category" placeholder="Category of the new Restaurant"/>-->
+            <fieldset>
+              <select class="form-control" id="category" data-ng-model="restaurant.category">
+                <option name="category">{{restaurant.category}}</option>
+                <!--<option value="saab">Saab</option>
+                <option value="opel">Opel</option>
+                <option value="audi">Audi</option>-->
+              </select>
+            </fieldset>
           </div>
+
           <div class="form-group">
             <label for="phone" class="control-label">Phone Number</label>
             <input type="text" class="form-control" id="phone"
@@ -32,7 +41,7 @@
           </div>
           <div class="form-group">
             <label for="email" class="control-label">Email</label>
-            <input type="text" class="form-control" id="email"
+            <input type="email" class="form-control" id="email"
                    data-ng-model="restaurant.email" required name="email" placeholder="Email Address of the new Restaurant"/>
           </div>
           <div class="form-group">

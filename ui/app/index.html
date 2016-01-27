@@ -47,16 +47,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">Restaurant Guide</a>
+            <a class="navbar-brand page-scroll" href=#/" is="page-top" is-not-authenticated>Restaurant Guide</a>
+            <a class="navbar-brand page-scroll" data-is-authenticated>Welcome {{user.firstname}}, {{user.lastname}}!</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" data-ng-controller="NavigationCtrl">
             <ul class="nav navbar-nav navbar-right">
-                <!--
-                <li>
-                  <a class="page-scroll" href="#about">Top 5 Restaurants</a>
-                </li> -->
                 <li>
                     <a class="page-scroll" href="#top6">Top 6</a>
                 </li>
@@ -67,10 +64,10 @@
                     <a class="page-scroll" href="#portfolio">Portfolio</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#login" is-not-authenticated>Login</a>
+                    <a class="page-scroll" href="#/signIn" is-not-authenticated>Login</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#/signup" is-not-authenticated>Register</a>
+                    <a class="page-scroll" href="#/signUp" is-not-authenticated>Register</a>
                 </li>
                 <li>
                   <a ng-href="#/" ng-click="logout()" is-authenticated>Logout</a>
@@ -85,25 +82,14 @@
     <!-- /.container-fluid -->
 </nav>
 
-
-<!--
-    <div class="container">
--->
-        <div data-is-authenticated>Logged in as {{user.firstname}}, {{user.lastname}}</div>
-        <div ng-view=""></div>
-<!--
-    </div>
--->
-
-
-
+  <div ng-view=""></div>
 
 <!--footer-->
-<div class="footer-section">
-    <div class="text-muted">
-        <p>&copy; 2016 SWENGS Project All rights reserved | Developed by IMA 2013 Students</p>
-    </div>
-</div>
+<!--<div class="footer-section">
+  <div class="text-muted">
+    <p>&copy; 2016 SWENGS Project All rights reserved | Developed by IMA 2013 Students</p>
+  </div>
+</div>-->
 
 
 
