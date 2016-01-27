@@ -18,6 +18,7 @@ GET           /user                        @controllers.UserController.list
 POST          /user                        @controllers.UserController.save
 GET           /user/count                  @controllers.UserController.count
 POST          /user/update                 @controllers.UserController.update
+GET           /user/:id                    @controllers.UserController.find(id: Int)
 GET           /user/pages/:page/:pageSize  @controllers.UserController.listWithPages(page:Int, pageSize:Int)
 DELETE        /user/:id                    @controllers.UserController.delete(id: Int)
 

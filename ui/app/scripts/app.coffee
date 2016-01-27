@@ -69,6 +69,10 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
     templateUrl: 'views/listcategories.html'
     controller: 'ListcategoriesCtrl'
     controllerAs: 'listCategories'
+  .when '/profile',
+    templateUrl: 'views/profile.html'
+    controller: 'ProfileCtrl'
+    controllerAs: 'profile'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>
