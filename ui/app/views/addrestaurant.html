@@ -1,9 +1,9 @@
-<header>
+<header class="detail">
   <section class="general">
   <div>
   <div class="panel">
     <div class="panel-heading">
-      <h3 class="panel-title">Add a new Restaurant</h3>
+      <h3>Add a new Restaurant</h3>
     </div>
     <div class="panel-body">
       <div class="alert alert-danger" data-ng-bind="error" data-ng-show="error"></div>
@@ -33,7 +33,7 @@
           </div>
           <div class="form-group">
             <label for="email" class="control-label">Email</label>
-            <input type="text" class="form-control" id="email"
+            <input type="email" class="form-control" id="email"
                    data-ng-model="restaurant.email" required name="email" placeholder="Email Address of the new Restaurant"/>
           </div>
           <div class="form-group">

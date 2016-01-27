@@ -1,28 +1,69 @@
-<header>
+<header class="detail">
   <section class="general">
-  <form name="singInForm" class="css-form">
-    <div class="form-group">
-        <label for="email">Email address *</label>
-        <input type="email" class="form-control" id="email" name="email" data-ng-model="signInInfo.email" placeholder="Email" required/>
-        <div ng-show="singInForm.email.$invalid && signInForm.email.$touched">
-            <span ng-show="signInForm.email.$error.required">Pleas insert your email.</span>
-            <span ng-show="signInForm.email.$error.email">This is not a valid email.</span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="password">Password *</label>
-        <input data-ng-model="signInInfo.password" name="password" name="password" type="password" class="form-control" id="password" placeholder="Password" required/>
-        <div ng-show="signInForm.password.$invalid && signInForm.password.$touched">
-            <span ng-show="signInForm.password.$error.required">Please select a password.</span>
-        </div>
+    <!-- Sign in form -->
+    <div class="container" >
+      <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
+        <div class="panel panel-info" >
+          <div class="panel-heading">
+            <div class="panel-title">Sign In</div>
+          </div>
 
+          <div style="padding-top:30px" class="panel-body" data-ng-controller="SigninCtrl" >
+
+            <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
+
+            <form id="loginform" class="form-horizontal" role="form" name="singInForm">
+              <!-- Email -->
+              <div style="margin-bottom: 25px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                <input data-ng-model="signInInfo.email" id="email" type="email" class="form-control" name="email" value="" placeholder="username or email" required/>
+                <!--
+                <div ng-show="singInForm.email.$invalid && signInForm.email.$touched">
+                  <span ng-show="signInForm.email.$error.required">Please insert your email.</span>
+                  <span ng-show="signInForm.email.$error.email">This is not a valid email.</span>
+                </div> -->
+              </div>
+              <!-- Password -->
+              <div style="margin-bottom: 25px" class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                <input data-ng-model="signInInfo.password" id="password" type="password" class="form-control" name="password" placeholder="password" required/>
+                <!--
+                <div ng-show="signInForm.password.$invalid && signInForm.password.$touched">
+                  <span ng-show="signInForm.password.$error.required">Please select a password.</span>
+                </div> -->
+              </div>
+              <!-- Remember me -->
+              <div class="input-group">
+                <div class="checkbox">
+                  <label>
+                    <input data-ng-model="signInInfo.rememberMe" id="login-remember" type="checkbox" name="remember" value="1"> Remember me
+                  </label>
+                </div>
+              </div>
+
+              <div style="margin-top:10px" class="form-group">
+                <!--Submit login button -->
+                <div class="col-sm-12 controls">
+                  <button id="btn-login" type="submit" class="btn btn-lg btn-primary btn-block" ng-click="signIn()">Login </button>
+
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-md-12 control">
+                  <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+                    Don't have an account!
+                    <a href="#/signUp">
+                      Sign Up Here
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="checkbox">
-        <label>
-            <input type="checkbox" data-ng-model="signInInfo.rememberMe"> Remember me
-        </label>
-    </div>
-    <button type="submit" class="btn btn-default" ng-click="singIn()">Log in</button>
-</form>
-    </section>
+    <!-- Sign in form ende -->
+  </section>
 </header>

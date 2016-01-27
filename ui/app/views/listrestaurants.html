@@ -1,16 +1,22 @@
-<table class="table table-bordered ">
-    <tr>
-        <th>Name</th>
-        <th>Rating</th>
-        <th>Street</th>
-        <th>City</th>
-        <th>ZIP</th>
-    </tr>
-    <tr data-ng-repeat="restaurant in restaurants">
-        <td><a href="#/restaurantDetails?restId={{restaurant.id}}">{{restaurant.name}}</a></td>
-        <td>{{restaurant.rating}}</td>
-        <td>{{restaurant.street}}</td>
-        <td>{{restaurant.city}}</td>
-        <td>{{restaurant.zip}}</td>
-    </tr>
-</table>
+<header class="detail">
+  <section class="general">
+    <table class="table table-bordered ">
+        <tr>
+            <th>Name</th>
+            <th>Rating</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>ZIP</th>
+        </tr>
+      <leaflet width="600px" height="400px" center="center" markers="markers"></leaflet>
+        <tr data-ng-repeat="restaurant in restaurants">
+            <td><a href="#/restaurantDetails?restId={{restaurant.id}}">{{restaurant.name}}</a></td>
+            <td>{{restaurant.rating}}</td>
+            <td>{{restaurant.street}}</td>
+            <td>{{restaurant.city}}</td>
+            <td>{{restaurant.zip}}</td>
+        </tr>
+    </table>
+  </section>
+</header>
+
