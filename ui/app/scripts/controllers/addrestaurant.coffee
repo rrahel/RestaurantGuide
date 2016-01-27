@@ -9,14 +9,14 @@
 ###
 angular.module 'uiApp'
   .controller 'AddrestaurantCtrl', ($http,$scope,RestaurantFactory,$location,GeoCoder)->
-   $scope.restaurant = new RestaurantFactory()
+   $scope.restaurant = {}
    $scope.error = null
    $scope.save = ->
-     addr = $scope.restaurant.zip+" "+$scope.restaurant.city+", "+$scope.restaurant.street
-     GeoCoder.geocode(addr)
+     address = $scope.restaurant.zip+" "+$scope.restaurant.city+", "+$scope.restaurant.street
+     GeoCoder.geocode(address)
      .then (result) ->
-      $scope.restaurant.lat = result.lat()
-      $scope.restaurant.lng = result.lng()
-     $scope.restaurant.$save()
-     .then -> $location.path "/"
-     .catch (resp) -> $scope.error = resp.data.message or resp.data
+       $scope.restaurant.lat = result.lat()
+       $scope.restaurant.lng = result.lng()
+       $http.post("/restaurants", $scope.restaurant)
+        .then -> $location.path "/"
+        .catch (resp) -> $scope.error = resp.data.message or resp.data
