@@ -9,50 +9,56 @@
 ###
 angular.module 'uiApp'
   .controller 'RestaurantdetailsCtrl', ($scope, $routeParams, RestaurantFactory, RatingFactory, $http, $route, $q) ->
-    ###createMarkerFromRestaurant = (r) ->
-      lat: r.lat
-      lng: r.lng
-      message: "#{r.name}"
-      draggable: false
-      focus: false
-
-    addMarker = (markers) ->
-      markers["ID_#{$scope.restaurant.id}"] = createMarkerFromRestaurant($scope.restaurant)
-      markers
-
-    createMarkers = (restaurants) -> members.reduce addMarker,{}
-
-    $scope.error = null
-    $scope.center = {}
-    $scope.markers = {}
-    $q.all [$scope.restaurant.$promise]
-    .then (results) ->
-      $scope.markers = createMarkers results[1]
-      $scope.center =
-        zoom: 10
-        lat: results[1][0].lat
-        lng: results[1][0].lng
-    .catch (resp) -> $scope.error = resp.data.message or resp.data
-
-    $scope.show = (id) ->
-      $scope.markers[prop].focus = false for prop of $scope.markers
-      $scope.markers["ID_#{id}"].focus = true###
-
-    ##rating
     restId = $routeParams.restId
+    $scope.user = {}
     $scope.restaurant = {}
+    $scope.rating = {}
+    $scope.comment = {}
+    $scope.comments = []
+
     $http.get("restaurants/#{restId}")
     .then (resp) ->
       $scope.restaurant = resp.data
-
+      getComments()
 
     $scope.rate = ->
-      $scope.rating = {}
-      $scope.rating.rating = parseFloat($scope.newRate)
-      $scope.rating.userId = 1
-      $scope.rating.restaurantId = $scope.restaurant.id
-      $http.post("/rating", $scope.rating)
-       .then -> $route.reload()
-       .catch (resp) -> $scope.error = resp.data.message or resp.data
+      $http.get("/whoami")
+       .then (response) ->
+        $scope.user = response.data
+        $http.get("rating/#{restId}")
+        .then (resp) ->
+          $scope.rating.id = resp.data.id
+          $scope.rating.rating = parseFloat($scope.newRate)
+          $scope.rating.userId = $scope.user.id
+          $scope.rating.restaurantId = $scope.restaurant.id
+          $http.post("/rating/#{$scope.rating.id}", $scope.rating)
+          .then -> $route.reload()
+          .catch (resp) -> $scope.error = resp.data.message or resp.data
+        .catch (error) ->
+          $scope.rating.rating = parseFloat($scope.newRate)
+          $scope.rating.userId = $scope.user.id
+          $scope.rating.restaurantId = $scope.restaurant.id
+          $http.post("/rating", $scope.rating)
+          .then -> $route.reload()
+          .catch (resp) -> $scope.error = resp.data.message or resp.data
+
+    $scope.addComment = ->
+      $http.get("/whoami")
+      .then (response) ->
+        $scope.user = response.data
+        $scope.comment.content = $scope.newComment
+        $scope.comment.userId = $scope.user.id
+        $scope.comment.restaurantId = $scope.restaurant.id
+        $http.post("/comment", $scope.comment)
+        .then -> $route.reload()
+        .catch (resp) -> $scope.error = resp.data.message or resp.data
+
+    getComments = () ->
+      $http.get("/comments/#{$scope.restaurant.id}")
+       .then (response) ->
+        $scope.comments = response.data
+
+
+
 
 

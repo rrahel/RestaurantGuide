@@ -28,6 +28,7 @@ class RatingRepositorySlickImpl extends RatingRepository with HasDatabaseConfig[
    * @return
    */
   override def save(rating: Rating, userId: Int): Future[Rating] = {
+    //val existingRatingFuture = findSpecific(rating.userId, rating.restaurantId)
     val existingRatingFuture = rating.id match {
       case None => Future.successful(None)
       case Some(id) => find(id)
@@ -92,6 +93,16 @@ class RatingRepositorySlickImpl extends RatingRepository with HasDatabaseConfig[
    */
   override def find(ratingId: Int): Future[Option[Rating]] = {
     db.run(ratings.filter(_.id === ratingId).result.headOption)
+  }
+
+  /**
+   * find existing rating by user and restaurant id
+   * @param userId
+   * @param restaurantId
+   * @return
+   */
+  override def findSpecific(userId: Int, restaurantId: Int): Future[Option[Rating]] = {
+    db.run(ratings.filter(x => (x.restaurantId === restaurantId && x.userId === userId)).result.headOption)
   }
 
   /**

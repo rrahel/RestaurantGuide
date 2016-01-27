@@ -47,8 +47,8 @@ class CommentRepositorySlickImpl extends CommentRepository with HasDatabaseConfi
    * @param restaurantId
    * @return
    */
-  override def readAllCommentsFromOneRestaurant(restaurantId: Int, page: Int, pageSize: Int): Future[Seq[Comment]] = {
-    db.run((comments.filter(_.restaurantId === restaurantId)).drop(page * pageSize).take(pageSize).result)
+  override def readAllCommentsFromOneRestaurant(restaurantId: Int): Future[Seq[Comment]] = {
+    db.run((comments.filter(_.restaurantId === restaurantId)).result)
   }
 
   /**

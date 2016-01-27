@@ -19,11 +19,9 @@ trait CommentRepository {
   /**
    * find all comments from one restaurant
    * @param restaurantId
-   * @param page
-   * @param pageSize
    * @return
    */
-  def readAllCommentsFromOneRestaurant(restaurantId: Int, page: Int, pageSize: Int):Future[Seq[Comment]]
+  def readAllCommentsFromOneRestaurant(restaurantId: Int):Future[Seq[Comment]]
 
   /**
    * find all comments from one user

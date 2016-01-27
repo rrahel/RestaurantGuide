@@ -73,5 +73,13 @@ trait RatingRepository {
    */
   def updateRatingOfRestaurant(restaurant: Restaurant, rating: Double):Future[Restaurant]
 
+  /**
+   * find existing rating by user and restaurant id
+   * @param userId
+   * @param restaurantId
+   * @return
+   */
+  def findSpecific(userId: Int, restaurantId: Int): Future[Option[Rating]]
+
 
 }
