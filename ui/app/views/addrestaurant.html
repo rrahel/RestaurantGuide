@@ -22,8 +22,9 @@
           </div>
           <div class="form-group">
             <label for="category" class="control-label">Category</label>
-            <input type="number" class="form-control" id="category"
-                   data-ng-model="restaurant.category" name="category" placeholder="Category of the new Restaurant"/>
+              <select class="form-control" data-ng-model="restaurant.category" id="category" name="category">
+                  <option data-ng-repeat="category in categories" value={{category.id}}>{{category.name}}</option>
+              </select>
           </div>
           <div class="form-group">
             <label for="phone" class="control-label">Phone Number</label>

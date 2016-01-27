@@ -8,9 +8,13 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'UpdatecommentCtrl', ($scope,CommentFactory,$location,$routeParams) ->
-    $scope.comment = new CommentFactory()
-    $scope.update = (commentId) ->
-      $scope.comment.$save id: $routeParams.commentId
-      .then -> $location.path "/"
+  .controller 'UpdatecommentCtrl', ($scope,CommentFactory,$location,$routeParams,$http) ->
+    commId = $routeParams.commId
+    $scope.comment = {}
+    $http.get("/comment/#{commId}")
+     .then (response) ->
+      $scope.comment = response.data
+    $scope.updateComment = ->
+      $http.post("/comment/#{commId}", $scope.comment)
+      .then -> $location.path "/restaurantDetails?restId=5"
       .catch (resp) -> $scope.error = resp.data.message or resp.data

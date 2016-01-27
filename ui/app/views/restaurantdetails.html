@@ -1,7 +1,7 @@
 <h1>{{restaurant.name}}</h1>
 <p>{{restaurant.description}}</p>
 
-<p>{{restaurant.rating}}</p>
+<p>{{restaurant.rating | number:1}}</p>
 <form novalidate name="rateForm" class="css-form" data-is-authenticated>
     <fieldset>
         <select data-ng-model="newRate" id="rate">
@@ -28,7 +28,7 @@
 <h2>Address:</h2>
 <p>{{restaurant.street}}</p>
 <p>{{restaurant.zip}} {{restaurant.city}}</p>
-<leaflet width="600px" height="400px" center="center" markers="markers"></leaflet>
+<div><leaflet width="600px" height="400px" center="center" markers="markers"></leaflet></div>
 
 <h1>Comments</h1>
 <form novalidate name="commentForm" class="css-form" data-is-authenticated>
@@ -46,6 +46,9 @@
 <table class="table table-bordered ">
     <tr data-ng-repeat="comment in comments">
         <td>{{comment.content}}</td>
-        <td></td>
+        <td data-own-comment="{{comment.id}}">
+            <a href="#/updateComment?commId={{comment.id}}"><button class="btn btn-default">Update</button></a>
+            <button class="btn btn-default" data-ng-click="deleteComment({{comment.id}})">Delete</button>
+        </td>
     </tr>
 </table>

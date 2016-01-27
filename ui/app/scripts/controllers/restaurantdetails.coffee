@@ -8,18 +8,34 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'RestaurantdetailsCtrl', ($scope, $routeParams, RestaurantFactory, RatingFactory, $http, $route, $q) ->
+  .controller 'RestaurantdetailsCtrl', ($scope, $routeParams, RestaurantFactory, RatingFactory, CommentFactory, $http, $route, $q) ->
     restId = $routeParams.restId
     $scope.user = {}
     $scope.restaurant = {}
     $scope.rating = {}
     $scope.comment = {}
     $scope.comments = []
+    $scope.center = {}
+    $scope.markers = {}
+
 
     $http.get("restaurants/#{restId}")
     .then (resp) ->
       $scope.restaurant = resp.data
       getComments()
+      $scope.markers = {
+        Restaurant: {
+          lat: $scope.restaurant.lat,
+          lng: $scope.restaurant.lng,
+          message: $scope.restaurant.name
+          focus: true,
+          draggable: false
+        }
+      }
+      $scope.center =
+        zoom: 17
+        lat: $scope.restaurant.lat
+        lng: $scope.restaurant.lng
 
     $scope.rate = ->
       $http.get("/whoami")
@@ -58,6 +74,10 @@ angular.module 'uiApp'
        .then (response) ->
         $scope.comments = response.data
 
+    $scope.deleteComment = (id) ->
+      $http.delete("/comment/#{id}")
+      .then -> $route.reload()
+      .catch (resp) -> $scope.error = resp.data.message or resp.data
 
 
 
