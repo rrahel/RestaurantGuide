@@ -26,8 +26,8 @@ class CommentController @Inject()(commentRepository: CommentRepository,
   }
 
   // everybody is able to read comments
-  def listAllCommentsFromOneRestaurant(restaurantId: Int, page:Option[Int],size:Option[Int]) = Action.async {
-    commentRepository.readAllCommentsFromOneRestaurant(restaurantId, page.getOrElse(0),size.getOrElse(100))
+  def listAllCommentsFromOneRestaurant(restaurantId: Int) = Action.async {
+    commentRepository.readAllCommentsFromOneRestaurant(restaurantId)
       .map(c => Ok(Json toJson c))
   }
 

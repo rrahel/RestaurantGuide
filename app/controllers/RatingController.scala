@@ -60,6 +60,11 @@ class RatingController @Inject() (ratingRepository: RatingRepository,
     implicit request => ratingRepository.readTop6Ratings().map(r => Ok(Json toJson r))
   }
 
-
+  def findSpecific(restId:Int) = SecuredAction.async {
+    implicit request => ratingRepository.findSpecific(request.identity.id.get,restId).map {
+      case Some(r) => Ok(Json toJson r)
+      case None => BadRequest(Json.obj("message"->"No Rating found!"))
+    }
+  }
 
 }
