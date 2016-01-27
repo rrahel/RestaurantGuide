@@ -8,7 +8,7 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'RestaurantdetailsCtrl', ($scope, $routeParams, RestaurantFactory, RatingFactory, $http, $route) ->
+  .controller 'RestaurantdetailsCtrl', ($scope, $routeParams, RestaurantFactory, RatingFactory, $http, $route, $q) ->
     restId = $routeParams.restId
     $scope.user = {}
     $scope.restaurant = {}

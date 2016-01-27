@@ -18,7 +18,8 @@ app = angular
     'ngTouch',
     'ngQuantum',
     'satellizer',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'leaflet-directive'
   ])
 
 app.run ($rootScope)->
