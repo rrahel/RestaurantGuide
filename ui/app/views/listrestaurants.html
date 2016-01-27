@@ -6,6 +6,7 @@
         <th>City</th>
         <th>ZIP</th>
     </tr>
+  <leaflet width="600px" height="400px" center="center" markers="markers"></leaflet>
     <tr data-ng-repeat="restaurant in restaurants">
         <td><a href="#/restaurantDetails?restId={{restaurant.id}}">{{restaurant.name}}</a></td>
         <td>{{restaurant.rating}}</td>

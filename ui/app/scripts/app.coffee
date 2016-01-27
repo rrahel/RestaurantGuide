@@ -29,7 +29,7 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/',
     templateUrl: '/views/main.html'
     controller: 'MainCtrl'
-  .when '/signup',
+  .when '/signUp',
     templateUrl: '/views/signup.html'
     controller: 'SignUpCtrl'
   .when '/signIn',
@@ -38,7 +38,7 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/listUsers',
     templateUrl: 'views/listusers.html'
     controller: 'ListusersCtrl'
-  .when '/addcategory',
+  .when '/addCategory',
     templateUrl: 'views/addcategory.html'
     controller: 'AddcategoryCtrl'
     controllerAs: 'addcategory'
