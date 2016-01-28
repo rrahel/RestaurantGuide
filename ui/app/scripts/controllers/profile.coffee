@@ -8,7 +8,7 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'ProfileCtrl',($scope, $routeParams, $http) ->
+  .controller 'ProfileCtrl',($scope, $routeParams, $http, $route, $location) ->
     $scope.user = {}
     $scope.restaurants = []
 
@@ -39,5 +39,5 @@ angular.module 'uiApp'
         roles: $scope.user.roles
       }
       $http.post("/user/update", updatedUser)
-
-
+       .then -> $location.path "/"
+       .catch (resp) -> $scope.error = resp.data.message or resp.data

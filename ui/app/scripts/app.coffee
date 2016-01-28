@@ -70,6 +70,14 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
     templateUrl: 'views/search.html'
     controller: 'SearchCtrl'
     controllerAs: 'search'
+  .when '/updateCategory',
+    templateUrl: 'views/updatecategory.html'
+    controller: 'UpdatecategoryCtrl'
+    controllerAs: 'updateCategory'
+  .when '/addUser',
+    templateUrl: 'views/adduser.html'
+    controller: 'AdduserCtrl'
+    controllerAs: 'addUser'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>

@@ -1,6 +1,6 @@
 <header class="detail">
     <section class="general">
-        Search: <input ng-model="query" placeholder="Please, enter at least two characters!" size="50">
+        Search: <input ng-model="query" typeahead="restaurant for restaurant in restaurants | filter: name" placeholder="Please, enter at least two characters!" size="50">
         <table class="table table-bordered ">
             <tr>
                 <th>Name</th>
