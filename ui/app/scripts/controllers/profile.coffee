@@ -25,5 +25,8 @@ angular.module 'uiApp'
         firstname: $scope.user.firstname
         lastname: $scope.user.lastname
         email: $scope.user.email
+        providerID: $scope.user.providerID
+        providerKey: $scope.user.providerKey
+        roles: $scope.user.roles
       }
       $http.post("/user/update", updatedUser)
