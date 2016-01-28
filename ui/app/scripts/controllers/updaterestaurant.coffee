@@ -7,7 +7,7 @@
  # # UpdaterestaurantCtrl
  # Controller of the uiApp
 angular.module 'uiApp'
-  .controller 'UpdaterestaurantCtrl', ($scope,CommentFactory,$location,$routeParams,$http) ->
+  .controller 'UpdaterestaurantCtrl', ($scope,CommentFactory,$location,$routeParams,$http,GeoCoder) ->
     restId = $routeParams.restId
     $scope.categories = []
     $scope.restaurant = {}
@@ -20,7 +20,12 @@ angular.module 'uiApp'
     .then (response) ->
       $scope.restaurant = response.data
     $scope.updateRestaurant = ->
-      $scope.restaurant.category = parseInt($scope.restaurant.category)
-      $http.post("/restaurants/#{restId}", $scope.restaurant)
-      .then -> $location.path "/addRestaurant"
-      .catch (resp) -> $scope.error = resp.data.message or resp.data
+      address = $scope.restaurant.zip+" "+$scope.restaurant.city+", "+$scope.restaurant.street
+      GeoCoder.geocode(address)
+      .then (result) ->
+        $scope.restaurant.lat = result.lat()
+        $scope.restaurant.lng = result.lng()
+        $scope.restaurant.category = parseInt($scope.restaurant.category)
+        $http.post("/restaurants/#{restId}", $scope.restaurant)
+         .then -> $location.path "/addRestaurant"
+         .catch (resp) -> $scope.error = resp.data.message or resp.data

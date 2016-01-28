@@ -9,8 +9,18 @@ describe 'Controller: AddcategoryCtrl', ->
   $httpBackend = {}
   $location = {}
 
-  category =
-    name: "Albanisch"
+  categories = [
+    {
+      name: "Albanisch"
+    },
+    {
+      name: "Italienisch"
+    }
+  ]
+
+  category = {
+    name: "Russisch"
+  }
 
   # Initialize the controller and a mock scope
   beforeEach inject ($controller, $rootScope,_$httpBackend_,_$location_) ->
@@ -20,21 +30,37 @@ describe 'Controller: AddcategoryCtrl', ->
     $controller 'AddcategoryCtrl', $scope: scope
 
 
-  it 'should create a new category and go to the start page if successful', ->
-    scope.category = angular.extend scope.category,category
-    $location.path "/addcategory"
-    $httpBackend.expectPOST("/categories",category).respond 200
+  it 'should create a new category', ->
+    $httpBackend.expectGET("/categories").respond 200, categories
+    expect(scope.categories.length).toBe 0
+    scope.category = angular.extend scope.category, category
+    $httpBackend.expectPOST("/categories", category).respond 200
     scope.save()
+    $httpBackend.expectGET("/views/main.html").respond 200
     $httpBackend.flush()
-    expect($location.path()).toBe "/"
+    expect(scope.categories.length).toBe 2
+
+  it 'should delete a category', ->
+    $httpBackend.expectGET("/categories").respond 200, categories
+    expect(scope.categories.length).toBe 0
+    scope.category = angular.extend scope.category, category
+    $httpBackend.expectPOST("/categories", category).respond 200
+    scope.save()
+    $httpBackend.expectGET("/views/main.html").respond 200
+    $httpBackend.flush()
+    expect(scope.categories.length).toBe 2
+    $httpBackend.expectDELETE("/categories/1").respond 200
+    scope.deleteCategory(1)
+    $httpBackend.flush()
 
 
   it "should provide an error message if creation fails", ->
+    $httpBackend.expectGET("/categories").respond 200, categories
+    expect(scope.categories.length).toBe 0
     scope.category = angular.extend scope.category,category
-    $location.path "/addcategory"
     $httpBackend.expectPOST("/categories",category).respond 500,message: "An Error occured!"
     scope.save()
+    $httpBackend.expectGET("/views/main.html").respond 200
     $httpBackend.flush()
-    expect($location.path()).toBe "/addcategory"
     expect(scope.error).toBe "An Error occured!"
 
