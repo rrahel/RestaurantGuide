@@ -94,7 +94,7 @@ class CategoryControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
 
-    "find a restaurants by the category id"in new RepositoryAwareContext {
+    "find  restaurants by the category "in new RepositoryAwareContext {
       new WithApplication(application) {
 
       }
