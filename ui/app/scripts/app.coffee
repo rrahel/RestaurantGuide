@@ -46,18 +46,10 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/addRestaurant',
     templateUrl: 'views/addrestaurant.html'
     controller: 'AddrestaurantCtrl'
-  .when '/addComments',
-    templateUrl: 'views/addcomments.html'
-    controller: 'AddcommentsCtrl'
-    controllerAs: 'addComments'
   .when '/updateComment',
     templateUrl: 'views/updatecomment.html'
     controller: 'UpdatecommentCtrl'
     controllerAs: 'updateComment'
-  .when '/deleteComment',
-    templateUrl: 'views/deletecomment.html'
-    controller: 'DeletecommentCtrl'
-    controllerAs: 'deleteComment'
   .when '/restaurantDetails',
     templateUrl: 'views/restaurantdetails.html'
     controller: 'RestaurantdetailsCtrl'
