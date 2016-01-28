@@ -80,14 +80,15 @@
                           <th>Street</th>
                           <th>ZIP</th>
                           <th>City</th>
-                          <th>Action</th>
+                          <th>Actions</th>
                       </tr>
                       <tr data-ng-repeat="restaurant in restaurants">
-                          <td>{{restaurant.name}}</td>
+                          <td><a href="#/restaurantDetails?restId={{restaurant.id}}">{{restaurant.name}}</a></td>
                           <td>{{restaurant.street}}</td>
                           <td>{{restaurant.zip}}</td>
                           <td>{{restaurant.city}}</td>
                           <td>
+                              <a href="#/updateRestaurant?restId={{restaurant.id}}"><button class="btn btn-default">Update</button></a>
                               <button class="btn btn-default" data-ng-click="deleteRestaurant({{restaurant.id}})">Delete</button>
                           </td>
                       </tr>

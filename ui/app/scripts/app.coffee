@@ -78,6 +78,10 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
     templateUrl: 'views/adduser.html'
     controller: 'AdduserCtrl'
     controllerAs: 'addUser'
+  .when '/updateRestaurant',
+    templateUrl: 'views/updaterestaurant.html'
+    controller: 'UpdaterestaurantCtrl'
+    controllerAs: 'updateRestaurant'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>
