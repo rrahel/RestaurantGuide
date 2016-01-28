@@ -67,5 +67,33 @@
     </div>
   </div>
 </div>
+      <div>
+          <div class="panel">
+              <div class="panel-heading">
+                  <h3>Restaurants</h3>
+              </div>
+              <div class="panel-body">
+                  <div class="alert alert-danger" data-ng-bind="error2" data-ng-show="errorC"></div>
+                  <table class="table table-bordered ">
+                      <tr>
+                          <th>Name</th>
+                          <th>Street</th>
+                          <th>ZIP</th>
+                          <th>City</th>
+                          <th>Action</th>
+                      </tr>
+                      <tr data-ng-repeat="restaurant in restaurants">
+                          <td>{{restaurant.name}}</td>
+                          <td>{{restaurant.street}}</td>
+                          <td>{{restaurant.zip}}</td>
+                          <td>{{restaurant.city}}</td>
+                          <td>
+                              <button class="btn btn-default" data-ng-click="deleteRestaurant({{restaurant.id}})">Delete</button>
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+          </div>
+      </div>
     </section>
 </header>
