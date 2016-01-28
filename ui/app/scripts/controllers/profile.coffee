@@ -8,8 +8,10 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'ProfileCtrl',($scope, $routeParams, $http) ->
+  .controller 'ProfileCtrl',($scope, $routeParams, $http , $location , $route) ->
     $scope.user = {}
+    $scope.error = null
+    $location = {}
 
     getUser = () ->
       $http.get("/whoami")
@@ -30,3 +32,5 @@ angular.module 'uiApp'
         roles: $scope.user.roles
       }
       $http.post("/user/update", updatedUser)
+      .then -> $location.path "/profile"
+      .catch (resp) -> $scope.error = resp.data.message or resp.data
