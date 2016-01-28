@@ -68,4 +68,19 @@ class RestaurantController @Inject()(restaurantRepository: RestaurantRepository,
     restaurantRepository.findResByName(name).map(c => Ok(Json toJson c))
   }
 
+  def updateRestaurants(restId: Int) = SecuredAction.async(parse.json){
+    implicit request => restaurantRepository.find(restId).flatMap{
+      case Some(restaurant) => request.body.validate[Restaurant].map{
+        restaurant => restaurantRepository.create(restaurant).map(c => Ok(Json toJson c))
+      }.recoverTotal {
+        case error => Future.successful(
+          BadRequest(Json.obj("message" -> "Error while updating"))
+        )
+      }
+      case None => Future.successful(BadRequest(Json.obj("message" -> "Restaurant could not be updated")))
+    }
+
+  }
+
+
 }
