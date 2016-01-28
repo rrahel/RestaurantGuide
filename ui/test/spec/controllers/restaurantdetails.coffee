@@ -1,4 +1,3 @@
-###
 'use strict'
 
 describe 'Controller: RestaurantdetailsCtrl', ->
@@ -19,11 +18,7 @@ describe 'Controller: RestaurantdetailsCtrl', ->
   $httpBackend = {}
   $routeParams = {}
 
-  createMember = (id) ->
-    id: id
-    name: "name#{id}"
-    lat: id
-    lng: id
+
 
   createMarkerFromRestaurant = (r) ->
     lat: r.lat
@@ -32,11 +27,12 @@ describe 'Controller: RestaurantdetailsCtrl', ->
     draggable: false
     focus: false
 
-  addMarker = (markers,member) ->
-    markers["ID_#{member.id}"] = createMarkerFromRestaurant(member)
+  addMarker = (markers,restaurant) ->
+    markers["ID_#{restaurant.id}"] = createMarkerFromRestaurant(restaurant)
     markers
 
-  createMarkers = (members) -> members.reduce addMarker,{}
+  createMarkers = (restaurant) -> restaurant.reduce addMarker,{}
+
 
   beforeEach inject ($rootScope,_$controller_,_$httpBackend_,_$routeParams_)->
     scope = $rootScope.$new()
@@ -45,26 +41,32 @@ describe 'Controller: RestaurantdetailsCtrl', ->
     $routeParams = _$routeParams_
 
 
-  it "should fetch the restaurant details and the group members", ->
-    members = [1..5].map createMember
-    $routeParams.groupId = 7
-    $httpBackend.expectGET('/groups/7')
-    .respond 200, {id:7,name:"Group 7",description:"Desc7"}
-    $httpBackend.expectGET('/groups/7/members')
-    .respond 200,members
-    $controller 'GroupdetailsCtrl', $scope: scope
-    expect(scope.group).toEqualData {}
-    expect(scope.members).toEqualData []
-    expect(scope.center).toEqual {}
-    expect(scope.error).toBe null
-    expect(scope.markers).toEqual {}
+  restaurant = {
+   id: 1
+   name: "Rest 1"
+   description: "Desc 1"
+   category: "Cat 1"
+   phone: "128761"
+   email: "Rest1.aoi@uia.at"
+   website: "Web 1"
+   rating: {}
+   street: "Alte Poststraße 147"
+   city: "Graz"
+   zip: "8020"
+   lat: 47.069718
+   lng: 15.409874
+  }
+
+ ### it "should fetch the restaurant details", ->
+    $routeParams.restId = 1
+    $controller 'RestaurantdetailsCtrl', $scope: scope
+    expect(scope.restaurant).toEqualData {}
+    $httpBackend.expectGET('/restaurants/1').respond 200, restaurant
     $httpBackend.flush()
-    expect(scope.group).toEqualData {id:7,name:"Group 7",description:"Desc7"}
-    expect(scope.members).toEqualData members
-    expect(scope.markers).toEqual createMarkers members
-    expect(scope.center).toEqual {zoom: 10, lat: members[0].lat, lng: members[0].lng }
-
-
+    expect(scope.restaurant).toEqualData restaurant
+ #   marker = createMarkers()
+###
+###
   it "should create an error message if reading the group fails", ->
     $routeParams.groupId = 7
     $httpBackend.expectGET('/groups/7').respond 500, message:"Error!!"

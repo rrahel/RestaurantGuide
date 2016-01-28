@@ -8,9 +8,10 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'ProfileCtrl',($scope, $routeParams, $http, $route, $location) ->
+  .controller 'ProfileCtrl',($scope, $routeParams, $http) ->
     $scope.user = {}
     $scope.restaurants = []
+    $scope.error = null
 
     getUser = () ->
       $http.get("/whoami")
@@ -39,5 +40,6 @@ angular.module 'uiApp'
         roles: $scope.user.roles
       }
       $http.post("/user/update", updatedUser)
-       .then -> $location.path "/"
-       .catch (resp) -> $scope.error = resp.data.message or resp.data
+ #     .then -> $location.path "/"
+ #     .then (resp)-> $rootScope.user = resp.data
+      .catch (resp) -> $scope.error = resp.data.message or resp.data
