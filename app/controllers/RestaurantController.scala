@@ -45,9 +45,12 @@ class RestaurantController @Inject()(restaurantRepository: RestaurantRepository,
   }
 
   def create = SecuredAction(IsAdmin()).async(parse.json) {
-    implicit request =>
-      restaurantRepository.create(request.body.validate[Restaurant].get)
-        .map(newRes => Ok(Json.toJson(newRes)))
+    implicit request =>request.body.validate[Restaurant].map{
+      restaurant =>restaurantRepository.create(restaurant).map(newRes => Ok(Json.toJson(newRes)))}.recoverTotal {
+      case error => Future.successful(
+        BadRequest(Json.obj("message" -> "Could not create restaurant"))
+      )
+    }
   }
 
   def findResById(resId:Int) = Action.async {
@@ -59,6 +62,10 @@ class RestaurantController @Inject()(restaurantRepository: RestaurantRepository,
 
   def deleteRestaurant(resId: Int) = SecuredAction(IsAdmin()).async{
     restaurantRepository.delete(resId).map(_ => Ok(Json obj "message" -> s"Restaurant was successfully deleted"))
+  }
+
+  def findRestByName(name: String) =  Action.async {
+    restaurantRepository.findResByName(name).map(c => Ok(Json toJson c))
   }
 
 }

@@ -1,9 +1,11 @@
-  <div class="header-content" id="top6">
+<header>
+<section id="top6">
+<!--<div class="header-content" >-->
+
     <div class="header-content-inner">
       <h1>Top Restaurants</h1>
       <hr>
       <p>These are the top 6 restaurants in Graz!</p>
-
       <div class="container-fluid">
         <div class="row no-gutter">
           <div class="col-lg-4 col-sm-6">
@@ -100,9 +102,10 @@
       </div>
 
 
-    </div>
+    <!--</div>-->
   </div>
-
+  </section>
+</header>
 
 <section id="services">
   <div class="container">
@@ -247,7 +250,7 @@
 </section>
 
 
-<section id="login">
+<section id="login" data-is-not-authenticated>
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-lg-offset-2 text-center">
@@ -256,14 +259,14 @@
       </div>
 
       <!-- Sign in form -->
-      <div class="container">
+      <div class="container" >
         <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
           <div class="panel panel-info" >
             <div class="panel-heading">
               <div class="panel-title">Sign In</div>
             </div>
 
-            <div style="padding-top:30px" class="panel-body" >
+            <div style="padding-top:30px" class="panel-body" data-ng-controller="SigninCtrl" >
 
               <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
 
@@ -299,7 +302,7 @@
                 <div style="margin-top:10px" class="form-group">
                   <!--Submit login button -->
                   <div class="col-sm-12 controls">
-                    <button id="btn-login" type="submit" class="btn btn-lg btn-primary btn-block" ng-click="singIn()">Login </button>
+                    <button id="btn-login" type="submit" class="btn btn-lg btn-primary btn-block" ng-click="signIn()">Login </button>
 
                   </div>
                 </div>
@@ -308,7 +311,7 @@
                   <div class="col-md-12 control">
                     <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
                       Don't have an account!
-                      <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show()">
+                      <a href="#/signUp">
                         Sign Up Here
                       </a>
                     </div>
@@ -326,16 +329,31 @@
   </div>
 </section>
 
+<!--footer-->
+<div class="footer-section">
+  <div class="text-muted">
+    <p>&copy; 2016 SWENGS Project All rights reserved | Developed by IMA 2013 Students</p>
+  </div>
+</div>
+
 <!-- jQuery -->
+<!--
 <script src="js/jquery.js"></script>
+-->
 
 <!-- Bootstrap Core JavaScript -->
+<!--
 <script src="js/bootstrap.min.js"></script>
+-->
 
 <!-- Plugin JavaScript -->
+<!--
 <script src="js/jquery.easing.min.js"></script>
 <script src="js/jquery.fittext.js"></script>
 <script src="js/wow.min.js"></script>
+-->
 
 <!-- Custom Theme JavaScript -->
+<!--
 <script src="js/creative.js"></script>
+-->

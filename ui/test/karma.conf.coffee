@@ -23,8 +23,10 @@ module.exports = (config) ->
       'bower_components/angular-sanitize/angular-sanitize.js'
       'bower_components/angular-touch/angular-touch.js',
       'bower_components/quantumui/dist/js/quantumui.js',
+      'bower_components/angular-bootstrap/ui-bootstrap-tpls.js',
       'bower_components/ui-router/release/angular-ui-router.js',
       'bower_components/satellizer/satellizer.js',
+      'bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js',
       'app/scripts/**/*.coffee'
       'test/mock/**/*.coffee'
       'test/spec/**/*.coffee'

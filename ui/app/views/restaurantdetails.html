@@ -1,0 +1,54 @@
+<h1>{{restaurant.name}}</h1>
+<p>{{restaurant.description}}</p>
+
+<p>{{restaurant.rating | number:1}}</p>
+<form novalidate name="rateForm" class="css-form" data-is-authenticated>
+    <fieldset>
+        <select data-ng-model="newRate" id="rate">
+            <option value=0.0>0 Very Bad</option>
+            <option value=1.0>1 Bad</option>
+            <option value=2.0>2 OK</option>
+            <option value=3.0>3 Good</option>
+            <option value=4.0>4 Very Good</option>
+            <option value=5.0>5 Excellent</option>
+        </select>
+    </fieldset>
+    <div class="btn-toolbar">
+        <button class="btn btn-primary" data-ng-click="rate()"
+                data-ng-disabled="rateForm.$invalid">Rate!
+        </button>
+    </div>
+</form>
+
+<h2>Contact:</h2>
+<p>PhoneNumber: <a href="tel:{{restaurant.phone}}">{{restaurant.phone}}</a></p>
+<p>E-Mail: <a href="mailto:{{restaurant.email}}">{{restaurant.email}}</a></p>
+<p>Website: <a href="{{restaurant.website}}">{{restaurant.website}}</a></p>
+
+<h2>Address:</h2>
+<p>{{restaurant.street}}</p>
+<p>{{restaurant.zip}} {{restaurant.city}}</p>
+<div><leaflet width="600px" height="400px" center="center" markers="markers"></leaflet></div>
+
+<h1>Comments</h1>
+<form novalidate name="commentForm" class="css-form" data-is-authenticated>
+    <fieldset>
+        <textarea type="text" class="form-control" id="content"
+                  data-ng-model="newComment" required name="content" placeholder="" rows="4" cols="50">
+        </textarea>
+    </fieldset>
+    <div class="btn-toolbar">
+        <button class="btn btn-primary" data-ng-click="addComment()"
+                data-ng-disabled="commentForm.$invalid">Add!
+        </button>
+    </div>
+</form>
+<table class="table table-bordered ">
+    <tr data-ng-repeat="comment in comments">
+        <td>{{comment.content}}</td>
+        <td data-own-comment="{{comment.id}}">
+            <a href="#/updateComment?commId={{comment.id}}"><button class="btn btn-default">Update</button></a>
+            <button class="btn btn-default" data-ng-click="deleteComment({{comment.id}})">Delete</button>
+        </td>
+    </tr>
+</table>

@@ -12,7 +12,7 @@ import play.api.mvc.{Action, Request}
 import _root_.repositories.UserRepository
 import com.mohiva.play.silhouette.api._
 import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
-import models.{SignUpInfo, User}
+import models.{UserPreview, SignUpInfo, User}
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import models.UserPreview._
@@ -54,6 +54,13 @@ class UserController @Inject()(val messagesApi: MessagesApi,
       Future.successful(identity.roles.contains("ADMINISTRATOR"))
   }
 
+  def find(id: Int) = Action.async {
+    userRepository.find(id).map {
+      case Some(user) => Ok(Json.toJson(user))
+      case None => NotFound(Json obj "message" -> s"User was not found")
+    }
+  }
+
   def list = SecuredAction(IsAdmin()
   ).async(implicit request => userRepository.all.map(users => Ok(Json toJson users)))
 
@@ -67,6 +74,21 @@ class UserController @Inject()(val messagesApi: MessagesApi,
 
   def count = SecuredAction(IsAdmin()
   ).async(implicit request => userRepository.count.map(count => Ok(Json toJson count)))
+
+
+
+  def update = SecuredAction.async(parse.json) {
+    implicit request => userRepository.find(request.identity.id.get).flatMap{
+      case Some(u) => request.body.validate[User].map{
+        user => userRepository.save(user).map(u => Ok(Json toJson u))
+      }.recoverTotal{
+        case error => Future.successful(BadRequest(Json.obj("message" -> "Error while updating")))
+      }
+      case None => Future.successful(BadRequest(Json.obj("message" -> "User was not found")))
+    }
+  }
+
+
 
   def save = SecuredAction(IsAdmin()).async(parse.json) { implicit request =>
     request.body.validate[SignUpInfo].map { data =>

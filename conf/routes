@@ -17,21 +17,26 @@ GET           /signout                     @controllers.SecurityController.signO
 GET           /user                        @controllers.UserController.list
 POST          /user                        @controllers.UserController.save
 GET           /user/count                  @controllers.UserController.count
+POST          /user/update                 @controllers.UserController.update
+GET           /user/:id                    @controllers.UserController.find(id: Int)
 GET           /user/pages/:page/:pageSize  @controllers.UserController.listWithPages(page:Int, pageSize:Int)
 DELETE        /user/:id                    @controllers.UserController.delete(id: Int)
 
 #Comments
-GET           /comments/:id                @controllers.CommentController.listAllCommentsFromOneRestaurant(id:Int,page:Option[Int],size:Option[Int])
-DELETE        /commentA/:id                @controllers.CommentController.deleteCommentAsAdmin(id: Int)
+GET           /comment/:id                 @controllers.CommentController.readComment(id: Int)
+GET           /comments/:id                @controllers.CommentController.listAllCommentsFromOneRestaurant(id:Int)
+GET           /comments                    @controllers.CommentController.listAllCommentsFromOneUser
+DELETE        /comment/admin/:id           @controllers.CommentController.deleteCommentAsAdmin(id: Int)
 DELETE        /comment/:id                 @controllers.CommentController.deleteComment(id: Int)
 POST          /comment/:id                 @controllers.CommentController.updateComment(id: Int)
 POST          /comment                     @controllers.CommentController.createComment
 
 #Ratings
-GET           /favorites                   @controllers.RatingController.topRestaurantsFromUser
-GET           /topRestaurants              @controllers.RatingController.topRestaurants
+GET           /rating/favorites            @controllers.RatingController.topRestaurantsFromUser
+GET           /rating/top                  @controllers.RatingController.topRestaurants
 POST          /rating/:id                  @controllers.RatingController.updateRating(id: Int)
 POST          /rating                      @controllers.RatingController.createRating
+GET           /rating/:id                  @controllers.RatingController.findSpecific(id: Int)
 
 #Restaurants
 GET            /restaurants                @controllers.RestaurantController.all()
@@ -40,12 +45,15 @@ GET            /restaurants                @controllers.RestaurantController.all
 GET            /restaurants/count          @controllers.RestaurantController.count()
 DELETE         /restaurants/:id            @controllers.RestaurantController.deleteRestaurant(id: Int)
 GET            /restaurants/:id            @controllers.RestaurantController.findResById(id: Int)
+GET            /restaurants/:name          @controllers.RestaurantController.findRestByName(name: String)
 
 #Categories
 GET             /categories                @controllers.CategoryController.all()
 POST            /categories                @controllers.CategoryController.create()
-#GET             /categories/:id            @controllers.CategoryController.find(id: Int)
+GET             /categories/:id            @controllers.CategoryController.find(id: Int)
 DELETE          /categories/:id            @controllers.CategoryController.delete(id: Int)
+GET             /count/:id                 @controllers.CategoryController.count(id: Int)
+
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                controllers.Assets.at(path="/public", file)
 

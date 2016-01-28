@@ -162,7 +162,7 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
         val insertedUser2 = userRepo.save(User(None, "Jane", "Miller", "jm@test.com", "test2", "test2")).futureValue
         val restaurant = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
         val newRating1 = ratingRepo.save(Rating(None, 5, insertedUser1.id.get, restaurant.id.get),insertedUser1.id.get).futureValue
-        val newRating2 = ratingRepo.save(Rating(None, 10, insertedUser1.id.get, restaurant.id.get),insertedUser1.id.get).futureValue
+        val newRating2 = ratingRepo.save(Rating(None, 10, insertedUser2.id.get, restaurant.id.get),insertedUser2.id.get).futureValue
         val calcRating = ratingRepo.calcRatingForRestaurant(restaurant.id.get).futureValue
         val updateRestaurant = ratingRepo.updateRatingOfRestaurant(restaurant, calcRating).futureValue
         val foundRestaurant = restaurantRepo.find(restaurant.id.get).futureValue
@@ -170,6 +170,23 @@ class RatingRepositorySpec extends PlaySpec with ScalaFutures{
       }
     }
 
+    "find a rating by user and restaurant id" in new SecurityTestContext {
+      new WithApplication(application) {
+        val userRepo = app.injector.instanceOf[UserRepository]
+        val ratingRepo = app.injector.instanceOf[RatingRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val insertedUser1 = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val insertedUser2 = userRepo.save(User(None, "Jane", "Miller", "jm@test.com", "test2", "test2")).futureValue
+        val restaurant = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newRating1 = ratingRepo.save(Rating(None, 5, insertedUser1.id.get, restaurant.id.get),insertedUser1.id.get).futureValue
+        val newRating2 = ratingRepo.save(Rating(None, 10, insertedUser2.id.get, restaurant.id.get),insertedUser2.id.get).futureValue
+        val foundRating = ratingRepo.findSpecific(insertedUser1.id.get, restaurant.id.get).futureValue
+        foundRating.get.rating mustBe newRating1.rating
+
+      }
+    }
   }
 
 }

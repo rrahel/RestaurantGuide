@@ -17,7 +17,9 @@ app = angular
     'ngSanitize',
     'ngTouch',
     'ngQuantum',
-    'satellizer'
+    'satellizer',
+    'ui.bootstrap',
+    'leaflet-directive'
   ])
 
 app.run ($rootScope)->
@@ -28,7 +30,7 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/',
     templateUrl: '/views/main.html'
     controller: 'MainCtrl'
-  .when '/signup',
+  .when '/signUp',
     templateUrl: '/views/signup.html'
     controller: 'SignUpCtrl'
   .when '/signIn',
@@ -37,9 +39,33 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/listUsers',
     templateUrl: 'views/listusers.html'
     controller: 'ListusersCtrl'
+  .when '/addCategory',
+    templateUrl: 'views/addcategory.html'
+    controller: 'AddcategoryCtrl'
+    controllerAs: 'addcategory'
   .when '/addRestaurant',
     templateUrl: 'views/addrestaurant.html'
     controller: 'AddrestaurantCtrl'
+  .when '/updateComment',
+    templateUrl: 'views/updatecomment.html'
+    controller: 'UpdatecommentCtrl'
+    controllerAs: 'updateComment'
+  .when '/restaurantDetails',
+    templateUrl: 'views/restaurantdetails.html'
+    controller: 'RestaurantdetailsCtrl'
+    controllerAs: 'restaurantDetails'
+  .when '/listRestaurants',
+    templateUrl: 'views/listrestaurants.html'
+    controller: 'ListrestaurantsCtrl'
+    controllerAs: 'listRestaurants'
+  .when '/listCategories',
+    templateUrl: 'views/listcategories.html'
+    controller: 'ListcategoriesCtrl'
+    controllerAs: 'listCategories'
+  .when '/profile',
+    templateUrl: 'views/profile.html'
+    controller: 'ProfileCtrl'
+    controllerAs: 'profile'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>
@@ -78,7 +104,6 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   $authProvider.storage = 'localStorage'
 
 
-  ###
   # Facebook
   $authProvider.facebook({
    clientId: '1503078423241610',
@@ -131,4 +156,5 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
    name: 'xing',
    popupOptions: { width: 495, height: 500 }
   }) #
-###
+
+

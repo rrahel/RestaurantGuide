@@ -26,9 +26,14 @@ class CommentController @Inject()(commentRepository: CommentRepository,
   }
 
   // everybody is able to read comments
-  def listAllCommentsFromOneRestaurant(restaurantId: Int, page:Option[Int],size:Option[Int]) = Action.async {
-    commentRepository.readAllCommentsFromOneRestaurant(restaurantId, page.getOrElse(0),size.getOrElse(100))
+  def listAllCommentsFromOneRestaurant(restaurantId: Int) = Action.async {
+    commentRepository.readAllCommentsFromOneRestaurant(restaurantId)
       .map(c => Ok(Json toJson c))
+  }
+
+  // list all comments from the logged in user -> to show the update/delete button in the frontend
+  def listAllCommentsFromOneUser() = SecuredAction.async {
+    implicit request => commentRepository.readAllCommentsFromOneUser(request.identity.id.get).map(c => Ok(Json toJson c))
   }
 
   // only admins can delete all comments
@@ -66,6 +71,14 @@ class CommentController @Inject()(commentRepository: CommentRepository,
       )
       }
       case None => Future.successful(BadRequest(Json.obj("message" -> "Comment could not be updated")))
+    }
+  }
+
+  // for updating comment
+  def readComment(commentId: Int) = SecuredAction.async {
+    commentRepository.find(commentId).map {
+      case Some(c) => Ok(Json toJson c)
+      case None => NotFound(Json.obj("message"->s"Comment with id=$commentId was not found"))
     }
   }
 

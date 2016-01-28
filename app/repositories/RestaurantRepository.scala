@@ -28,6 +28,6 @@ trait RestaurantRepository {
   //delete a restaurant
   def delete(restaurantId:Int):Future[Unit]
 
-  //find restaurants by the category
-  def findResByCat(catId: Int):Future[Some[Restaurant]]
+  //find restaurants by the name
+  def findResByName(name: String):Future[Seq[Restaurant]]
 }

@@ -184,24 +184,49 @@ class RestaurantControllerSpec extends PlaySpec with ScalaFutures {
       }
     }
 
- /*   "allow admins to create new restaurants" in new RepositoryAwareContext {
-     override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com", Set("USER", "ADMINISTRATOR"))
+    "allow admins to create new restaurants" in new RepositoryAwareContext {
+      override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com", Set("USER", "ADMINISTRATOR"))
       new WithApplication(application) {
         val token = CSRF.SignedTokenProvider.generateToken
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val restaurant = Restaurant(None, "Restaurant1", None, category.id.get, Some("+43 666 666 666"), Some("fun@coding.com"), None, None, "Alte Poststrasse", "Graz", "4020", 01.0101, 11.1001)
         val newRestaurantResponse = route(FakeRequest(POST, "/restaurants")
-                      .withJsonBody(Json.obj("name"->"Test restaurants","description"->"Test Description", "category" ->"Italienisch","phone"->"+666 66 66 6","email"->"fun@max", "website"->"intenso.stark", "rating"->"2", "street"->"futja kot", "city"->"graz","zip"->"234", "lat"->"9.898", "lng"->"52.465"))
-                      .withAuthenticator[JWTAuthenticator](admin.loginInfo)
+                      .withJsonBody(Json.toJson(restaurant))
+                      .withAuthenticator[JWTAuthenticator](identity.loginInfo)
           .withHeaders("Csrf-Token" -> token)
           .withSession("csrfToken"->token)).get
 
         status(newRestaurantResponse) must be(OK)
         contentType(newRestaurantResponse) must be(Some("application/json"))
-        val restaurant = contentAsJson(newRestaurantResponse).as[Restaurant]
-        restaurant.id mustNot be(None)
-        restaurant.name mustBe "Test restaurants"
+        val restaurantTest = contentAsJson(newRestaurantResponse).as[Restaurant]
+        restaurantTest.id mustNot be (None)
+        restaurantTest.name mustBe restaurant.name
+      }
+    }
+
+    "find restaurants by name"in new RepositoryAwareContext {
+      new WithApplication(application) {
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1", None, category.id.get, Some("+43 666 666 666"), Some("fun@coding.com"), None, None, "Alte Poststrasse", "Graz", "4020", 01.0101, 11.1001)).futureValue
+        val restaurant2 = restaurantRepo.create(Restaurant(None, "Restaurant2", None, category.id.get, Some("+43 666 666 666"), Some("fun@coding.com"), None, None, "Alte Poststrasse", "Graz", "4020", 01.0101, 11.1001)).futureValue
+        val restaurant3 = restaurantRepo.create(Restaurant(None, "Restaurant3", None, category.id.get, Some("+43 666 666 666"), Some("fun@coding.com"), None, None, "Alte Poststrasse", "Graz", "4020", 01.0101, 11.1001)).futureValue
+        val name = "Rest"
+        val resReponse = route(FakeRequest(GET, s"/restaurants?name=${name}")
+              .withAuthenticator[JWTAuthenticator](identity.loginInfo))
+          .get
+        status(resReponse) must be(OK)
+        contentType(resReponse) must be(Some("application/json"))
+        val restaurants = contentAsJson(resReponse).as[Seq[Restaurant]]
+        restaurants.length mustBe 3
+        restaurants.head.name mustBe restaurant1.name
 
       }
-    }*/
+    }
 
   }
 }

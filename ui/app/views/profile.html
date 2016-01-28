@@ -1,0 +1,23 @@
+<header class="detail">
+  <section class="general">
+    <form name="profileForm" class="css-form">
+
+      <div class="form-group">
+        <label for="firstname">Firstname: {{user.firstname}}</label>
+        <input type="text" id="firstname" name="firstname" data-ng-model="firstnameUpdate" placeholder="Change your firstname" />
+      </div>
+
+      <div class="form-group">
+        <label for="lastname">Lastname: {{user.lastname}}</label>
+        <input type="text" name="lastname" id="lastname" data-ng-model="lastnameUpdate" placeholder="Change your lastname" />
+
+        </div>
+
+      <button type="submit" class="btn btn-danger" ng-click="update()">Submit</button>
+      <div class="form-group">
+        <label>Email: {{user.email}}</label>
+      </div>
+      </div>
+    </form>
+  </section>
+</header>

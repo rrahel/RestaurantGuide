@@ -3,13 +3,13 @@
 
 <head>
 
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="">
-  <meta name="author" content="">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-  <title>Restaurant Guide</title>
+    <title>Restaurant Guide</title>
 
   <!-- Bootstrap Core CSS -->
   <link rel="stylesheet" href="styles/bootstrap.min.css" type="text/css">
@@ -31,403 +31,85 @@
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
   <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!--<link rel="stylesheet" href="bower_components/quantumui/dist/css/quantumui.css" />-->
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 
 </head>
 
-<body id="page-top">
+<body ng-app="uiApp" id="page-top">
 
 <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand page-scroll" href="#page-top">Restaurant Guide</a>
-    </div>
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand page-scroll" href=#/" is="page-top" is-not-authenticated>Restaurant Guide</a>
+            <a class="navbar-brand page-scroll" data-is-authenticated>Welcome {{user.firstname}}, {{user.lastname}}!</a>
+        </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-        <!--
-        <li>
-          <a class="page-scroll" href="#about">Top 5 Restaurants</a>
-        </li> -->
-        <li>
-          <a class="page-scroll" href="#services">Top 6</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="#services">Services</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="#portfolio">Portfolio</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="#login">Login</a>
-        </li>
-        <li>
-          <a class="page-scroll" href="#">Register</a>
-        </li>
-      </ul>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" data-ng-controller="NavigationCtrl">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="page-scroll" href="#top6">Top 6</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#services">Services</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#portfolio">Portfolio</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#/signIn" is-not-authenticated>Login</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="#/signUp" is-not-authenticated>Register</a>
+                </li>
+                <li>
+                  <a ng-href="#/" ng-click="logout()" is-authenticated>Logout</a>
+                </li>
+                <li>
+                  <a  href="#/profile" is-authenticated>Profile</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
     </div>
-    <!-- /.navbar-collapse -->
-  </div>
-  <!-- /.container-fluid -->
+    <!-- /.container-fluid -->
 </nav>
 
-<header>
-  <div class="header-content">
-    <div class="header-content-inner">
-      <h1>Top 6 Restaurants</h1>
-      <hr>
-      <p>Das sind die Top 6 bewertete Restaurants in Graz!</p>
+  <div ng-view=""></div>
 
-      <div class="container-fluid">
-        <div class="row no-gutter">
-          <div class="col-lg-4 col-sm-6">
-            <a href="#" class="portfolio-box">
-              <img src="images/portfolio/1.jpg" class="img-responsive" alt="">
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Category
-                  </div>
-                  <div class="project-name">
-                    Project Name
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-lg-4 col-sm-6">
-            <a href="#" class="portfolio-box">
-              <img src="images/portfolio/2.jpg" class="img-responsive" alt="">
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Category
-                  </div>
-                  <div class="project-name">
-                    Project Name
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-lg-4 col-sm-6">
-            <a href="#" class="portfolio-box">
-              <img src="images/portfolio/3.jpg" class="img-responsive" alt="">
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Category
-                  </div>
-                  <div class="project-name">
-                    Project Name
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-lg-4 col-sm-6">
-            <a href="#" class="portfolio-box">
-              <img src="images/portfolio/4.jpg" class="img-responsive" alt="">
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Category
-                  </div>
-                  <div class="project-name">
-                    Project Name
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-lg-4 col-sm-6">
-            <a href="#" class="portfolio-box">
-              <img src="images/portfolio/5.jpg" class="img-responsive" alt="">
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Category
-                  </div>
-                  <div class="project-name">
-                    Project Name
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-          <div class="col-lg-4 col-sm-6">
-            <a href="#" class="portfolio-box">
-              <img src="images/portfolio/6.jpg" class="img-responsive" alt="">
-              <div class="portfolio-box-caption">
-                <div class="portfolio-box-caption-content">
-                  <div class="project-category text-faded">
-                    Category
-                  </div>
-                  <div class="project-name">
-                    Project Name
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-
-
-    </div>
+<!--footer-->
+<!--<div class="footer-section">
+  <div class="text-muted">
+    <p>&copy; 2016 SWENGS Project All rights reserved | Developed by IMA 2013 Students</p>
   </div>
-</header>
-
-<!--
-<section class="bg-primary" id="about">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 text-center">
-        <h2 class="section-heading">We've got what you need!</h2>
-        <hr class="light">
-        <p class="text-faded">Start Bootstrap has everything you need to get your new website up and running in no time! All of the templates and themes on Start Bootstrap are open source, free to download, and easy to use. No strings attached!</p>
-        <a href="#" class="btn btn-default btn-xl">Get Started!</a>
-      </div>
-    </div>
-  </div>
-</section> -->
-
-<section id="services">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 text-center">
-        <h2 class="section-heading">Services we offer...</h2>
-        <hr class="primary">
-      </div>
-    </div>
-  </div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-3 col-md-6 text-center">
-        <div class="service-box">
-          <!-- glyphicon glyphicon-search-->
-
-          <i class="fa fa-4x fa-search wow bounceIn text-primary"></i>
-          <h3>Find a restaurant</h3>
-          <p class="text-muted">Find a restaurant according to categories and location.</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 text-center">
-        <div class="service-box">
-          <i class="fa fa-4x fa-download wow bounceIn text-primary" data-wow-delay=".1s"></i>
-          <h3>Download the menu of a restaurant</h3>
-          <p class="text-muted">You can see and download the menu of a specific restaurant!</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 text-center">
-        <div class="service-box">
-          <i class="fa fa-4x fa-map-marker wow bounceIn text-primary" data-wow-delay=".2s"></i>
-          <h3>Find the location</h3>
-          <p class="text-muted">You can see the location of the restaurants in Google Maps.</p>
-        </div>
-      </div>
-      <div class="col-lg-3 col-md-6 text-center">
-        <div class="service-box">
-          <i class="fa fa-4x fa-comment wow bounceIn text-primary" data-wow-delay=".3s"></i>
-          <h3>Rate & comment</h3>
-          <p class="text-muted">As a guest you can see the ratings and comments of a restaurant and as user you can give your own feedback.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="no-padding" id="portfolio">
-  <div class="container-fluid">
-    <div class="row no-gutter">
-      <div class="col-lg-4 col-sm-6">
-        <a href="#" class="portfolio-box">
-          <img src="images/portfolio/1.jpg" class="img-responsive" alt="">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a href="#" class="portfolio-box">
-          <img src="images/portfolio/2.jpg" class="img-responsive" alt="">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a href="#" class="portfolio-box">
-          <img src="images/portfolio/3.jpg" class="img-responsive" alt="">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a href="#" class="portfolio-box">
-          <img src="images/portfolio/4.jpg" class="img-responsive" alt="">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a href="#" class="portfolio-box">
-          <img src="images/portfolio/5.jpg" class="img-responsive" alt="">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="col-lg-4 col-sm-6">
-        <a href="#" class="portfolio-box">
-          <img src="images/portfolio/6.jpg" class="img-responsive" alt="">
-          <div class="portfolio-box-caption">
-            <div class="portfolio-box-caption-content">
-              <div class="project-category text-faded">
-                Category
-              </div>
-              <div class="project-name">
-                Project Name
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+</div>-->
 
 
-<section id="login">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 text-center">
-        <h2 class="section-heading">Sign in</h2>
-        <hr class="primary">
-      </div>
-
-      <!-- Sign in form -->
-      <div class="container">
-        <div id="loginbox" style="margin-top:50px;" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
-          <div class="panel panel-info" >
-            <div class="panel-heading">
-              <div class="panel-title">Sign In</div>
-            </div>
-
-            <div style="padding-top:30px" class="panel-body" >
-
-              <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
-
-              <form id="loginform" class="form-horizontal" role="form" name="singInForm">
-                <!-- Email -->
-                <div style="margin-bottom: 25px" class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                  <input data-ng-model="signInInfo.email" id="email" type="email" class="form-control" name="email" value="" placeholder="username or email" required/>
-                  <!--
-                  <div ng-show="singInForm.email.$invalid && signInForm.email.$touched">
-                    <span ng-show="signInForm.email.$error.required">Please insert your email.</span>
-                    <span ng-show="signInForm.email.$error.email">This is not a valid email.</span>
-                  </div> -->
-                </div>
-                <!-- Password -->
-                <div style="margin-bottom: 25px" class="input-group">
-                  <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                  <input data-ng-model="signInInfo.password" id="password" type="password" class="form-control" name="password" placeholder="password" required/>
-                  <!--
-                  <div ng-show="signInForm.password.$invalid && signInForm.password.$touched">
-                    <span ng-show="signInForm.password.$error.required">Please select a password.</span>
-                  </div> -->
-                </div>
-                <!-- Remember me -->
-                <div class="input-group">
-                  <div class="checkbox">
-                    <label>
-                      <input data-ng-model="signInInfo.rememberMe" id="login-remember" type="checkbox" name="remember" value="1"> Remember me
-                    </label>
-                  </div>
-                </div>
-
-                <div style="margin-top:10px" class="form-group">
-                  <!--Submit login button -->
-                  <div class="col-sm-12 controls">
-                    <button id="btn-login" type="submit" class="btn btn-lg btn-primary btn-block" ng-click="singIn()">Login </button>
-
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <div class="col-md-12 control">
-                    <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
-                      Don't have an account!
-                      <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show()">
-                        Sign Up Here
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sign in form ende -->
-
-    </div>
-  </div>
-</section>
 
 <!-- jQuery -->
 <script src="js/jquery.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
 <script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap.js"></script>
 
 <!-- Plugin JavaScript -->
+<script src="js/cbpAnimatedHeader.js"></script>
+<script src="js/classie.js"></script>
 <script src="js/jquery.easing.min.js"></script>
 <script src="js/jquery.fittext.js"></script>
 <script src="js/wow.min.js"></script>
@@ -435,22 +117,64 @@
 <!-- Custom Theme JavaScript -->
 <script src="js/creative.js"></script>
 
-<script src="scripts/controllers/addrestaurant.js"></script>
-<script src="scripts/controllers/listusers.js"></script>
+<!-- build:js(.) scripts/oldieshim.js -->
+<!--[if lt IE 9]>
+<script src="bower_components/es5-shim/es5-shim.js"></script>
+<script src="bower_components/json3/lib/json3.min.js"></script>
+<![endif]-->
+<!-- endbuild -->
+
+<!-- build:js(.) scripts/vendor.js -->
+<!-- bower:js -->
+<script src="bower_components/jquery/dist/jquery.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+<script src="bower_components/leaflet/dist/leaflet-src.js"></script>
+<script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+<script src="bower_components/angular-resource/angular-resource.js"></script>
+<script src="bower_components/angular-route/angular-route.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/angular-touch/angular-touch.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="bower_components/json3/lib/json3.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/quantumui/dist/js/quantumui.js"></script>
+<script src="bower_components/satellizer/satellizer.js"></script>
+<script src="bower_components/ui-router/release/angular-ui-router.js"></script>
+<!-- endbower -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/scripts.js -->
+<script src="scripts/app.js"></script>
 <script src="scripts/controllers/main.js"></script>
-<script src="scripts/controllers/navigation.js"></script>
-<script src="scripts/controllers/signin.js"></script>
 <script src="scripts/controllers/signup.js"></script>
-<script src="scripts/directives/isadmin.js"></script>
+<script src="scripts/controllers/signin.js"></script>
+<script src="scripts/services/userfactory.js"></script>
+<script src="scripts/controllers/navigation.js"></script>
 <script src="scripts/directives/isauthenticated.js"></script>
 <script src="scripts/directives/isnotauthenticated.js"></script>
+<script src="scripts/services/identity.js"></script>
+<script src="scripts/directives/isadmin.js"></script>
+<script src="scripts/controllers/listusers.js"></script>
+<script src="scripts/services/user.js"></script>
 <script src="scripts/directives/mustmatch.js"></script>
 <script src="scripts/services/geocoder.js"></script>
-<script src="scripts/services/identity.js"></script>
+<script src="scripts/controllers/addcomments.js"></script>
+<script src="scripts/controllers/addcategory.js"></script>
+<script src="scripts/controllers/addrestaurant.js"></script>
+<script src="scripts/controllers/listrestaurants.js"></script>
+<script src="scripts/controllers/restaurantdetails.js"></script>
+<script src="scripts/services/commentfactory.js"></script>
 <script src="scripts/services/restaurantfactory.js"></script>
-<script src="scripts/services/user.js"></script>
-<script src="scripts/services/userfactory.js"></script>
-
+<script src="scripts/services/ratingfactory.js"></script>
+<script src="scripts/services/commentsfactory.js"></script>
+<script src="scripts/controllers/updatecomment.js"></script>
+<script src="scripts/controllers/deletecomment.js"></script>
+<script src="scripts/services/categoryfactory.js"></script>
+<script src="scripts/controllers/profile.js"></script>
+<script src="scripts/directives/owncomment.js"></script>
+<!-- endbuild -->
 </body>
-
 </html>
