@@ -143,6 +143,37 @@ class RatingControllerSpec extends PlaySpec with ScalaFutures {
 
       }
     }
+
+    "find a rating by user and restaurant id" in new RepositoryAwareContext {
+      new WithApplication(application) {
+        val userRepo = app.injector.instanceOf[UserRepository]
+        val ratingRepo = app.injector.instanceOf[RatingRepository]
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val insertedUser1 = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
+        val insertedUser2 = userRepo.save(User(None, "Jane", "Miller", "jm@test.com", "test2", "test2")).futureValue
+        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val restaurant2 = restaurantRepo.create(Restaurant(None, "Restaurant2",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val newRating1 = ratingRepo.save(Rating(None, 5, insertedUser1.id.get, restaurant1.id.get),insertedUser1.id.get).futureValue
+        val newRating2 = ratingRepo.save(Rating(None, 10, insertedUser2.id.get, restaurant1.id.get),insertedUser2.id.get).futureValue
+        val getRatingString = "/rating/" + restaurant1.id.get
+        val getRatingResponse = route(FakeRequest(GET, getRatingString)
+          .withAuthenticator[JWTAuthenticator](identity.loginInfo)
+        ).get
+        status(getRatingResponse) must be(OK)
+        contentType(getRatingResponse) mustBe Some("application/json")
+        val json = contentAsJson(getRatingResponse)
+        val foundRating = Json.fromJson[Rating](json).get
+        foundRating.rating mustBe newRating1.rating
+
+        val getRatingString2 = "/rating/" + restaurant2.id.get
+        val getRatingResponse2 = route(FakeRequest(GET, getRatingString2)
+          .withAuthenticator[JWTAuthenticator](identity.loginInfo)
+        ).get
+        status(getRatingResponse2) must be(NOT_FOUND)
+      }
+    }
   }
 
 }

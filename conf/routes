@@ -23,9 +23,9 @@ GET           /user/pages/:page/:pageSize  @controllers.UserController.listWithP
 DELETE        /user/:id                    @controllers.UserController.delete(id: Int)
 
 #Comments
-GET           /comment/:id                 @controllers.CommentController.readComment(id: Int)
-GET           /comments/:id                @controllers.CommentController.listAllCommentsFromOneRestaurant(id:Int,page:Option[Int],size:Option[Int])
 GET           /comments                    @controllers.CommentController.listAllCommentsFromOneUser
+GET           /comment/:id                 @controllers.CommentController.readComment(id: Int)
+GET           /comments/:id                @controllers.CommentController.listAllCommentsFromOneRestaurant(id:Int)
 DELETE        /comment/admin/:id           @controllers.CommentController.deleteCommentAsAdmin(id: Int)
 DELETE        /comment/:id                 @controllers.CommentController.deleteComment(id: Int)
 POST          /comment/:id                 @controllers.CommentController.updateComment(id: Int)
@@ -36,6 +36,7 @@ GET           /rating/favorites            @controllers.RatingController.topRest
 GET           /rating/top                  @controllers.RatingController.topRestaurants
 POST          /rating/:id                  @controllers.RatingController.updateRating(id: Int)
 POST          /rating                      @controllers.RatingController.createRating
+GET           /rating/:id                  @controllers.RatingController.findSpecific(id: Int)
 
 #Restaurants
 GET            /restaurants                @controllers.RestaurantController.all()

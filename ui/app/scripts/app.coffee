@@ -18,7 +18,8 @@ app = angular
     'ngTouch',
     'ngQuantum',
     'satellizer',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'leaflet-directive'
   ])
 
 app.run ($rootScope)->
@@ -29,7 +30,7 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/',
     templateUrl: '/views/main.html'
     controller: 'MainCtrl'
-  .when '/signup',
+  .when '/signUp',
     templateUrl: '/views/signup.html'
     controller: 'SignUpCtrl'
   .when '/signIn',
@@ -38,25 +39,17 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
   .when '/listUsers',
     templateUrl: 'views/listusers.html'
     controller: 'ListusersCtrl'
-  .when '/addcategory',
+  .when '/addCategory',
     templateUrl: 'views/addcategory.html'
     controller: 'AddcategoryCtrl'
     controllerAs: 'addcategory'
   .when '/addRestaurant',
     templateUrl: 'views/addrestaurant.html'
     controller: 'AddrestaurantCtrl'
-  .when '/addComments',
-    templateUrl: 'views/addcomments.html'
-    controller: 'AddcommentsCtrl'
-    controllerAs: 'addComments'
   .when '/updateComment',
     templateUrl: 'views/updatecomment.html'
     controller: 'UpdatecommentCtrl'
     controllerAs: 'updateComment'
-  .when '/deleteComment',
-    templateUrl: 'views/deletecomment.html'
-    controller: 'DeletecommentCtrl'
-    controllerAs: 'deleteComment'
   .when '/restaurantDetails',
     templateUrl: 'views/restaurantdetails.html'
     controller: 'RestaurantdetailsCtrl'

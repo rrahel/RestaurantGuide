@@ -91,33 +91,8 @@ class CommentRepositorySpec extends PlaySpec with ScalaFutures{
         val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
         val newComment = Comment(None, "testComment", insertedUser.id.get, restaurant1.id.get)
         val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
-        val commentsSeq = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get,0,1).futureValue
+        val commentsSeq = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get).futureValue
         newComment.content mustBe commentsSeq.head.content
-      }
-    }
-
-    "support pagination when listing comments " in new SecurityTestContext {
-      new WithApplication(application) {
-        val userRepo = app.injector.instanceOf[UserRepository]
-        val commentRepo = app.injector.instanceOf[CommentRepository]
-        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
-        val categoryRepo = app.injector.instanceOf[CategoryRepository]
-        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
-        val insertedUser = userRepo.save(User(None, "John", "Doe", "jd@test.com", "test", "test")).futureValue
-        val restaurant1 = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
-        val newComment = Comment(None, "testComment1", insertedUser.id.get, restaurant1.id.get)
-        val newComment2 = Comment(None, "testComment2", insertedUser.id.get, restaurant1.id.get)
-        val newComment3 = Comment(None, "testComment3", insertedUser.id.get, restaurant1.id.get)
-        val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
-        val testComment2 = commentRepo.save(newComment2,insertedUser.id.get).futureValue
-        val testComment3 = commentRepo.save(newComment3,insertedUser.id.get).futureValue
-        val page1 = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get, 0, 2).futureValue
-        page1.length mustBe 2
-        page1.head.content mustBe "testComment1"
-        page1(1).content mustBe "testComment2"
-        val page2 = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get, 1, 2).futureValue
-        page2.length mustBe 1
-        page2.head.content mustBe "testComment3"
       }
     }
 
@@ -134,7 +109,7 @@ class CommentRepositorySpec extends PlaySpec with ScalaFutures{
         val testComment = commentRepo.save(newComment,insertedUser.id.get).futureValue
         val changeComment = Comment(testComment.id, "testChangeComment", insertedUser.id.get, restaurant1.id.get)
         val testChangeComment = commentRepo.save(changeComment,insertedUser.id.get).futureValue
-        val comments = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get,0,5).futureValue
+        val comments = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get).futureValue
         comments.size mustBe 1
         comments.head.content mustBe changeComment.content
 

@@ -31,6 +31,13 @@
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
   <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
   <![endif]-->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!--<link rel="stylesheet" href="bower_components/quantumui/dist/css/quantumui.css" />-->
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
 
 </head>
 
@@ -47,16 +54,13 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand page-scroll" href="#page-top">Restaurant Guide</a>
+            <a class="navbar-brand page-scroll" href=#/" is="page-top" is-not-authenticated>Restaurant Guide</a>
+            <a class="navbar-brand page-scroll" data-is-authenticated>Welcome {{user.firstname}}, {{user.lastname}}!</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" data-ng-controller="NavigationCtrl">
             <ul class="nav navbar-nav navbar-right">
-                <!--
-                <li>
-                  <a class="page-scroll" href="#about">Top 5 Restaurants</a>
-                </li> -->
                 <li>
                     <a class="page-scroll" href="#top6">Top 6</a>
                 </li>
@@ -67,10 +71,10 @@
                     <a class="page-scroll" href="#portfolio">Portfolio</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#login" is-not-authenticated>Login</a>
+                    <a class="page-scroll" href="#/signIn" is-not-authenticated>Login</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="#/signup" is-not-authenticated>Register</a>
+                    <a class="page-scroll" href="#/signUp" is-not-authenticated>Register</a>
                 </li>
                 <li>
                   <a ng-href="#/" ng-click="logout()" is-authenticated>Logout</a>
@@ -85,25 +89,14 @@
     <!-- /.container-fluid -->
 </nav>
 
-
-<!--
-    <div class="container">
--->
-        <div data-is-authenticated>Logged in as {{user.firstname}}, {{user.lastname}}</div>
-        <div ng-view=""></div>
-<!--
-    </div>
--->
-
-
-
+  <div ng-view=""></div>
 
 <!--footer-->
-<div class="footer-section">
-    <div class="text-muted">
-        <p>&copy; 2016 SWENGS Project All rights reserved | Developed by IMA 2013 Students</p>
-    </div>
-</div>
+<!--<div class="footer-section">
+  <div class="text-muted">
+    <p>&copy; 2016 SWENGS Project All rights reserved | Developed by IMA 2013 Students</p>
+  </div>
+</div>-->
 
 
 
@@ -168,14 +161,18 @@
 <script src="scripts/services/user.js"></script>
 <script src="scripts/directives/mustmatch.js"></script>
 <script src="scripts/services/geocoder.js"></script>
-<script src="scripts/controllers/addcomments.js"></script>
 <script src="scripts/controllers/addcategory.js"></script>
+<script src="scripts/controllers/addrestaurant.js"></script>
+<script src="scripts/controllers/listrestaurants.js"></script>
+<script src="scripts/controllers/restaurantdetails.js"></script>
 <script src="scripts/services/commentfactory.js"></script>
+<script src="scripts/services/restaurantfactory.js"></script>
+<script src="scripts/services/ratingfactory.js"></script>
 <script src="scripts/services/commentsfactory.js"></script>
 <script src="scripts/controllers/updatecomment.js"></script>
-<script src="scripts/controllers/deletecomment.js"></script>
 <script src="scripts/services/categoryfactory.js"></script>
 <script src="scripts/controllers/profile.js"></script>
+<script src="scripts/directives/owncomment.js"></script>
 <!-- endbuild -->
 </body>
 </html>

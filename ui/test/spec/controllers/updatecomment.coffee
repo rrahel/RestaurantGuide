@@ -1,3 +1,4 @@
+###
 'use strict'
 
 describe 'Controller: UpdatecommentCtrl', ->
@@ -44,3 +45,4 @@ describe 'Controller: UpdatecommentCtrl', ->
     $httpBackend.flush()
     expect($location.path()).toBe "/updateComment"
     expect(scope.error).toBe "An Error occured!"
+###

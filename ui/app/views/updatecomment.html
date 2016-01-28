@@ -1,5 +1,16 @@
-<header>
+<header class="detail">
   <section class="general">
-  <p>This is the updateComment view.</p>
+      <form novalidate name="commentForm" class="css-form" data-is-authenticated>
+          <fieldset>
+        <textarea type="text" class="form-control" id="content"
+                  data-ng-model="comment.content" required name="content" placeholder="" rows="4" cols="50">
+        </textarea>
+          </fieldset>
+          <div class="btn-toolbar">
+              <button class="btn btn-primary" data-ng-click="updateComment()"
+                      data-ng-disabled="commentForm.$invalid">Update
+              </button>
+          </div>
+      </form>
   </section>
 </header>
