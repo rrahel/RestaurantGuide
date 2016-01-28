@@ -9,7 +9,7 @@
 ###
 angular.module 'uiApp'
   .controller 'ProfileCtrl',($scope, $routeParams, $http) ->
-    $scope.user
+    $scope.user = {}
 
     getUser = () ->
       $http.get("/whoami")
@@ -19,7 +19,11 @@ angular.module 'uiApp'
 
     getUser();
 
-    update = () ->
-      $scope.user.firstname = $scope.firstnameUpdate
-      $scope.user.lastname = $scope.lastnameUpdate
-      $http.post("/user/update", $scope.user)
+    $scope.update = () ->
+      updatedUser={
+        id: $scope.user.id
+        firstname: $scope.user.firstname
+        lastname: $scope.user.lastname
+        email: $scope.user.email
+      }
+      $http.post("/user/update", updatedUser)
