@@ -9,6 +9,7 @@ describe 'Controller: ListrestaurantsCtrl', ->
     scope = {}
     $httpBackend = {}
     $routeParams = {}
+    $controller = {}
 
     restaurants = [{
       id: 1
@@ -19,7 +20,7 @@ describe 'Controller: ListrestaurantsCtrl', ->
       email: "test@test.com"
       website: "www.test.com"
       rating: 4.9
-      street: "Alte Poststraße 148"
+      street: "Alte PoststraÃŸe 148"
       city: "Graz"
       zip: "8020"
       lat: 47.06
@@ -33,7 +34,7 @@ describe 'Controller: ListrestaurantsCtrl', ->
         email: "test@test.com"
         website: "www.test.com"
         rating: 4.5
-        street: "Alte Poststraße 149"
+        street: "Alte PoststraÃŸe 149"
         city: "Graz"
         zip: "8020"
         lat: 47.06
@@ -41,19 +42,18 @@ describe 'Controller: ListrestaurantsCtrl', ->
       }
     ]
 
-    catId = undefined
+    catId = 1
 
   # Initialize the controller and a mock scope
-    beforeEach inject ($controller, $rootScope,_$httpBackend_,_$routeParams_) ->
+    beforeEach inject (_$controller_, $rootScope,_$httpBackend_,_$routeParams_) ->
       scope = $rootScope.$new()
       $httpBackend = _$httpBackend_
       $routeParams = _$routeParams_
-      $controller 'ListrestaurantsCtrl', $scope: scope
+      $controller = _$controller_
 
     it 'list some restaurants',  ->
-      expect(scope.restaurants).toEqual []
       $routeParams.catId = 1
-      catId = $routeParams.catId
+      $controller 'ListrestaurantsCtrl', $scope: scope
       $httpBackend.expectGET("/categories/#{catId}").respond 200, restaurants
       expect(scope.restaurants.length).toBe 0
       $httpBackend.flush()

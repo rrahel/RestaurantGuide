@@ -11,6 +11,7 @@ angular.module 'uiApp'
     restId = $routeParams.restId
     $scope.categories = []
     $scope.restaurant = {}
+    $scope.error = null
 
     $http.get("/categories")
     .then (response) ->

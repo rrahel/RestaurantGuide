@@ -1,4 +1,3 @@
-###
 'use strict'
 
 describe 'Controller: ProfileCtrl', ->
@@ -72,4 +71,3 @@ describe 'Controller: ProfileCtrl', ->
     $httpBackend.flush()
     expect(scope.user).toEqualData updateduser
 
-###

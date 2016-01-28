@@ -68,7 +68,7 @@ describe 'Controller: AddrestaurantCtrl', ->
       lng: 15.409874
 
   createCategories = (nr) ->
-    [0..nr].map (n) ->
+    [1..nr].map (n) ->
       id: n
       name: "Category #{n}"
 

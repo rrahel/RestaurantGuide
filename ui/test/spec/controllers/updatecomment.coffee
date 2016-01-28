@@ -9,6 +9,7 @@ describe 'Controller: UpdatecommentCtrl', ->
   scope = {}
   $httpBackend = {}
   $routeParams = {}
+  $controller = {}
 
   comment = {
     id: 1
@@ -24,21 +25,20 @@ describe 'Controller: UpdatecommentCtrl', ->
     restaurantId: 1
   }
 
-  commId = undefined
+  commId = 1
 
   # Initialize the controller and a mock scope
-  beforeEach inject ($controller, $rootScope,_$httpBackend_,_$routeParams_) ->
+  beforeEach inject (_$controller_, $rootScope,_$httpBackend_,_$routeParams_) ->
     scope = $rootScope.$new()
     $httpBackend = _$httpBackend_
     $routeParams = _$routeParams_
-    $controller 'UpdatecommentCtrl', $scope: scope
+    $controller = _$controller_
+
 
   it 'should find and update a comment',  ->
-    expect(scope.comment).toEqual {}
     $routeParams.commId = 1
-    commId = $routeParams.commId
+    $controller 'UpdatecommentCtrl', $scope: scope
     $httpBackend.expectGET("/comment/#{commId}").respond 200, comment
-    scope.update
-    $httpBackend.expectPOST("/comment/#{commId}", updateComment).respond 200
+    $httpBackend.expectPOST("/comment/#{commId}", scope.comment).respond 200, updateComment
+    scope.updateComment()
     $httpBackend.flush()
-    expect(scope.comment.content).toBe "Good Restaurant"

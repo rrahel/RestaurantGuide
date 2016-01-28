@@ -33,6 +33,30 @@ describe 'Controller: RestaurantdetailsCtrl', ->
 
   createMarkers = (restaurant) -> restaurant.reduce addMarker,{}
 
+  restaurant =
+      id: 1
+      name: "Rest 1"
+      description: "Desc 1"
+      category: "Cat 1"
+      phone: "128761"
+      email: "Rest1.aoi@uia.at"
+      website: "Web 1"
+      rating: {}
+      street: "Alte Poststraße 147"
+      city: "Graz"
+      zip: "8020"
+      lat: 47.069718
+      lng: 15.409874
+
+  comment =
+    id: 1
+    content: "Best Restaurant"
+    userId: 1
+    restaurantId: 1
+
+  restId = 1
+  commId = 1
+
 
   beforeEach inject ($rootScope,_$controller_,_$httpBackend_,_$routeParams_)->
     scope = $rootScope.$new()
@@ -40,79 +64,12 @@ describe 'Controller: RestaurantdetailsCtrl', ->
     $httpBackend = _$httpBackend_
     $routeParams = _$routeParams_
 
-
-  restaurant = {
-   id: 1
-   name: "Rest 1"
-   description: "Desc 1"
-   category: "Cat 1"
-   phone: "128761"
-   email: "Rest1.aoi@uia.at"
-   website: "Web 1"
-   rating: {}
-   street: "Alte Poststraße 147"
-   city: "Graz"
-   zip: "8020"
-   lat: 47.069718
-   lng: 15.409874
-  }
-
- ### it "should fetch the restaurant details", ->
+  it "should fetch the restaurant details", ->
     $routeParams.restId = 1
     $controller 'RestaurantdetailsCtrl', $scope: scope
     expect(scope.restaurant).toEqualData {}
-    $httpBackend.expectGET('/restaurants/1').respond 200, restaurant
+    $httpBackend.expectGET("/restaurants/#{restId}").respond 200, restaurant
+    $httpBackend.expectGET('/views/main.html').respond 200
+    $httpBackend.expectGET("/comments/#{commId}").respond 200, comment
     $httpBackend.flush()
     expect(scope.restaurant).toEqualData restaurant
- #   marker = createMarkers()
-###
-###
-  it "should create an error message if reading the group fails", ->
-    $routeParams.groupId = 7
-    $httpBackend.expectGET('/groups/7').respond 500, message:"Error!!"
-    $httpBackend.expectGET('/groups/7/members').respond 200, []
-    $controller 'GroupdetailsCtrl', $scope: scope
-    expect(scope.group).toEqualData {}
-    expect(scope.members).toEqualData []
-    expect(scope.error).toBe null
-    $httpBackend.flush()
-    expect(scope.error).toBe "Error!!"
-
-  it "should create an error message if reading group members fails", ->
-    $routeParams.groupId = 7
-    $httpBackend.expectGET('/groups/7')
-    .respond 200, {id:7,name:"Group 7",description:"Desc7"}
-    $httpBackend.expectGET('/groups/7/members')
-    .respond 500, message: "No Members today"
-    $controller 'GroupdetailsCtrl', $scope: scope
-    expect(scope.group).toEqualData {}
-    expect(scope.members).toEqualData []
-    expect(scope.error).toBe null
-    $httpBackend.flush()
-    expect(scope.group).toEqualData {id:7,name:"Group 7",description:"Desc7"}
-    expect(scope.error).toBe "No Members today"
-
-  it "should allow to highlight markers programmatically", ->
-    members = [1..5].map createMember
-    $routeParams.groupId = 7
-    $httpBackend.expectGET('/groups/7')
-    .respond 200, {id:7,name:"Group 7",description:"Desc7"}
-    $httpBackend.expectGET('/groups/7/members')
-    .respond 200,members
-    $controller 'GroupdetailsCtrl', $scope: scope
-    expect(scope.group).toEqualData {}
-    expect(scope.members).toEqualData []
-    expect(scope.center).toEqual {}
-    expect(scope.error).toBe null
-    expect(scope.markers).toEqual {}
-    $httpBackend.flush()
-    markers = createMarkers members
-    scope.show(3)
-    show3 = (angular.copy markers)
-    show3.ID_3.focus=true
-    expect(scope.markers).toEqual show3
-    scope.show(5)
-    show5 = (angular.copy markers)
-    show5.ID_5.focus=true
-    expect(scope.markers).toEqual show5
-###
