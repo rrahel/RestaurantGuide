@@ -13,5 +13,5 @@ angular.module 'uiApp'
       updateVisibility = ->
         element.css('display', if CommentFactory.ownComment parseInt attrs.ownComment then '' else 'none');
       $scope.$on "userChanged", updateVisibility
-      attrs.$observe 'isMemberOf' , updateVisibility
+      attrs.$observe 'ownComment' , updateVisibility
       updateVisibility()
