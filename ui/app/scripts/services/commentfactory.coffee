@@ -17,15 +17,15 @@ angular.module 'uiApp'
     }
 
     class Comment
-      comments = []
+      commentSeq: []
       ownComment: (commentId) ->
-        commentWithId = this.comments.map (i) -> i.id
+        commentWithId = this.commentSeq.map (i) -> i.id
         commentId in commentWithId
 
     myComments = new Comment()
     $rootScope.$on 'userChanged', () ->
       $http.get("/comments")
        .then (response) ->
-        myComments.comments = response.data
+        myComments.commentSeq = response.data
 
     myComments
