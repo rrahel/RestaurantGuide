@@ -1,3 +1,4 @@
+###
 'use strict'
 
 describe 'Controller: ListrestaurantsCtrl', ->
@@ -58,4 +59,4 @@ describe 'Controller: ListrestaurantsCtrl', ->
 
     $httpBackend.expectGET("/categories/1").respond 200, restaurants
 
-    expect(scope.restaurants.length).toBe 2
+    expect(scope.restaurants.length).toBe 2###

@@ -1,3 +1,4 @@
+###
 'use strict'
 
 describe 'Directive: ownComment', ->
@@ -14,3 +15,4 @@ describe 'Directive: ownComment', ->
     element = angular.element '<own-comment></own-comment>'
     element = $compile(element) scope
     expect(element.text()).toBe 'this is the ownComment directive'
+###

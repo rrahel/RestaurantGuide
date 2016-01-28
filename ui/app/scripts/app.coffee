@@ -66,6 +66,10 @@ app.config ($routeProvider,$httpProvider, $authProvider) ->
     templateUrl: 'views/profile.html'
     controller: 'ProfileCtrl'
     controllerAs: 'profile'
+  .when '/search',
+    templateUrl: 'views/search.html'
+    controller: 'SearchCtrl'
+    controllerAs: 'search'
   .otherwise '/'
 
   $httpProvider.interceptors.push ($q, $injector) =>
