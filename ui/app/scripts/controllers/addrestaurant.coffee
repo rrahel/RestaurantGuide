@@ -25,5 +25,11 @@ angular.module 'uiApp'
        $scope.restaurant.lng = result.lng()
        $scope.restaurant.category = parseInt($scope.restaurant.category)
        $http.post("/restaurants", $scope.restaurant)
-        .then -> $location.path "/"
+        .then -> $route.reload()
         .catch (resp) -> $scope.error = resp.data.message or resp.data
+
+
+   $scope.deleteRestaurant = (id) ->
+     $http.delete("/restaurants/#{id}")
+     .then -> $route.reload()
+     .catch (resp) -> $scope.error2 = resp.data.message or resp.data

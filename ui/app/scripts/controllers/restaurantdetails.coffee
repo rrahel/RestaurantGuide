@@ -19,7 +19,7 @@ angular.module 'uiApp'
     $scope.markers = {}
 
 
-    $http.get("restaurants/#{restId}")
+    $http.get("/restaurants/#{restId}")
     .then (resp) ->
       $scope.restaurant = resp.data
       getComments()

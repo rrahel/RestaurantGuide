@@ -8,8 +8,9 @@ import play.api.libs.json._
  * Created by Christoph on 14.01.2016.
  */
 case class Restaurant(id: Option[Int], name: String, description: Option[String],
-                      category: Int, phone: Option[String], email: Option[String], website: Option[String],
-                      rating: Option[Double], street: String, city: String, zip: String, lat: Double, lng: Double)
+                      category: Int, phone: Option[String], email: Option[String],
+                      website: Option[String], rating: Option[Double], street: String,
+                      city: String, zip: String, lat: Double, lng: Double)
 
 object Restaurant {
 
