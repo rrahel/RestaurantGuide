@@ -10,6 +10,7 @@
 angular.module 'uiApp'
   .controller 'ProfileCtrl',($scope, $routeParams, $http) ->
     $scope.user = {}
+    $scope.restaurants = []
 
     getUser = () ->
       $http.get("/whoami")
@@ -18,6 +19,14 @@ angular.module 'uiApp'
       .catch (resp) -> $scope.error = resp.data.message or resp.data
 
     getUser();
+
+    getRestaurants = () ->
+      $http.get("/rating/favorites")
+      .then (resp) ->
+        $scope.restaurants = resp.data
+      .catch (resp) -> $scope.error = resp.data.message or resp.data
+
+    getRestaurants();
 
     $scope.update = () ->
       updatedUser={
@@ -30,3 +39,5 @@ angular.module 'uiApp'
         roles: $scope.user.roles
       }
       $http.post("/user/update", updatedUser)
+
+
