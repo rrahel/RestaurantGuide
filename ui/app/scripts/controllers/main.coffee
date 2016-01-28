@@ -24,6 +24,7 @@ angular.module('uiApp')
       $http.get("/rating/top")
       .then (resp) ->
         $scope.restaurants = resp.data
+        $scope.restaurants = (item for item in $scope.restaurants when item.rating?)
       .catch (resp) -> $scope.error = resp.data.message or resp.data
 
     getRestaurants();
