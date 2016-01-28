@@ -76,7 +76,6 @@ class RestaurantControllerSpec extends PlaySpec with ScalaFutures {
         status(restaurantResponse) must be(NOT_FOUND)
         contentType(restaurantResponse) must be(Some("application/json"))
         (contentAsJson(restaurantResponse) \ "message").as[String] mustBe "Restaurant with id=99 was not found"
-
       }
     }
 
@@ -225,6 +224,27 @@ class RestaurantControllerSpec extends PlaySpec with ScalaFutures {
         restaurants.length mustBe 3
         restaurants.head.name mustBe restaurant1.name
 
+      }
+    }
+    "update restaurants"in new RepositoryAwareContext {
+      override val identity = User(Some(1), "The", "Admin", "admin@test.com", "credentials", "admin@test.com", Set("USER", "ADMINISTRATOR"))
+      new WithApplication(application) {
+        val restaurantRepo = app.injector.instanceOf[RestaurantRepository]
+        val categoryRepo = app.injector.instanceOf[CategoryRepository]
+        val category = categoryRepo.create(Category(None, "Italienisch")).futureValue
+        val restaurant = restaurantRepo.create(Restaurant(None, "Restaurant1",None,category.id.get,Some("+43 666 666 666"),Some("fun@coding.com"), None, None, "Alte Poststrasse","Graz","4020",01.0101,11.1001)).futureValue
+        val token = CSRF.SignedTokenProvider.generateToken
+
+        val updateRes = Restaurant(restaurant.id, "Update", None, category.id.get, Some("+43 666 666 666"), Some("fun@coding.com"), None, None, "Alte Poststrasse", "Graz", "4020", 01.0101, 11.1001)
+        val updateRestString = "/restaurants/" + restaurant.id.get
+        val updateRestResponse = route(FakeRequest(POST, updateRestString)
+          .withAuthenticator[JWTAuthenticator](identity.loginInfo)
+          .withJsonBody(Json.toJson(updateRes))
+          .withHeaders("Csrf-Token" -> token)
+          .withSession("csrfToken"->token)
+        ).get
+        status(updateRestResponse) must be(OK)
+        contentType(updateRestResponse) mustBe Some("application/json")
       }
     }
 

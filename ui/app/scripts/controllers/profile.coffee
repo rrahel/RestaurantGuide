@@ -8,7 +8,7 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'ProfileCtrl',($scope, $routeParams, $http ,$rootScope, $location) ->
+  .controller 'ProfileCtrl',($scope, $routeParams, $http) ->
     $scope.user = {}
     $scope.restaurants = []
     $scope.error = null

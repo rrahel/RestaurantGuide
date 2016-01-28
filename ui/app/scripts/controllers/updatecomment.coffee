@@ -16,5 +16,5 @@ angular.module 'uiApp'
       $scope.comment = response.data
     $scope.updateComment = ->
       $http.post("/comment/#{commId}", $scope.comment)
-      .then -> $location.path "/restaurantDetails?restId=#{comment.restaurantId}"
+      .then -> $location.url "/restaurantDetails?restId=#{$scope.comment.restaurantId}"
       .catch (resp) -> $scope.error = resp.data.message or resp.data

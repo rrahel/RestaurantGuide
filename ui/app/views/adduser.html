@@ -1,0 +1,81 @@
+<header class="detail" data-is-admin>
+    <section class="general">
+        <div>
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Add a new user</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="alert alert-danger" data-ng-bind="error" data-ng-show="error"></div>
+                    <form name="addUserForm" class="css-form" novalidate>
+                        <div class="form-group">
+                            <label for="firstname">Firstname *</label>
+                            <input type="text" class="form-control" id="firstname" name="firstname" data-ng-model="user.firstname" placeholder="Firstname" required/>
+                            <div ng-show="addUserForm.firstname.$invalid && addUserForm.firstname.$touched">Please insert your firstname.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname">Lastname *</label>
+                            <input type="text" class="form-control" id="lastname"  name="lastname" data-ng-model="user.lastname" placeholder="Lastname" required/>
+                            <div ng-show="addUserForm.lastname.$invalid && addUserForm.lastname.$touched">Please insert your lastname.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email address *</label>
+                            <input type="email" class="form-control" id="email" name="email" data-ng-model="user.email" placeholder="Email" required/>
+                            <div ng-show="addUserForm.email.$invalid && addUserForm.email.$touched">
+                                <span ng-show="addUserForm.email.$error.required">Pleas insert your email.</span>
+                                <span ng-show="addUserForm.email.$error.email">This is not a valid email.</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password *</label>
+                            <input data-ng-model="user.password" name="password" name="password" type="password" class="form-control" id="password" placeholder="Password" required/>
+                            <div ng-show="addUserForm.password.$invalid && addUserForm.password.$touched">
+                                <span ng-show="addUserForm.password.$error.required">Please select a password.</span>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label for="password2">Re-type your Password *</label>
+                            <input data-ng-model="password2" type="password" class="form-control" id="password2" name="password2" placeholder="re-type Password" required must-match="user.password"/>
+                            <div ng-show="addUserForm.password2.$invalid && addUserForm.password2.$touched">
+                                <span ng-show="addUserForm.password2.$error.required">Please re-type your password.</span>
+                                <span ng-show="addUserForm.password2.$error.mustMatch">Make sure that you re-type your password correctly.</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" ng-click="save()" ng-disabled="addUserForm.$invalid">Submit</button>
+                        <a href="#/" class="btn btn-default">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3>Users</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="alert alert-danger" data-ng-bind="error2" data-ng-show="errorC"></div>
+                    <table class="table table-bordered ">
+                        <tr>
+                            <th>E-Mail</th>
+                            <th>Firstname</th>
+                            <th>Lastname</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr data-ng-repeat="user in users">
+                            <td>{{user.email}}</td>
+                            <td>{{user.firstname}}</td>
+                            <td>{{user.lastname}}</td>
+                            <td>
+                                <button class="btn btn-default" data-ng-click="deleteUser({{user.id}})">Delete</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+</header>
+

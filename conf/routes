@@ -43,6 +43,7 @@ GET            /restaurants                @controllers.RestaurantController.all
 POST           /restaurants                @controllers.RestaurantController.create()
 GET            /restaurants                @controllers.RestaurantController.allWithPages(page:Option[Int],size:Option[Int])
 GET            /restaurants/count          @controllers.RestaurantController.count()
+POST           /restaurants/:id            @controllers.RestaurantController.updateRestaurants(id: Int)
 DELETE         /restaurants/:id            @controllers.RestaurantController.deleteRestaurant(id: Int)
 GET            /restaurants/:id            @controllers.RestaurantController.findResById(id: Int)
 GET            /restaurants/:name          @controllers.RestaurantController.findRestByName(name: String)

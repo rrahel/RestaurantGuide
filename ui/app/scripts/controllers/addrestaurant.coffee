@@ -8,7 +8,8 @@
  # Controller of the uiApp
 ###
 angular.module 'uiApp'
-  .controller 'AddrestaurantCtrl', ($http,$scope,RestaurantFactory,$location,GeoCoder)->
+  .controller 'AddrestaurantCtrl', ($http,$scope,RestaurantFactory,$location,GeoCoder,$route)->
+   $scope.restaurants = RestaurantFactory.query()
    $scope.restaurant = {}
    $scope.categories = []
    $scope.error = null
@@ -28,8 +29,7 @@ angular.module 'uiApp'
         .then -> $route.reload()
         .catch (resp) -> $scope.error = resp.data.message or resp.data
 
-
    $scope.deleteRestaurant = (id) ->
-     $http.delete("/restaurants/#{id}")
+    $http.delete("/restaurants/#{id}")
      .then -> $route.reload()
      .catch (resp) -> $scope.error2 = resp.data.message or resp.data
