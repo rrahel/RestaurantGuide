@@ -28,11 +28,18 @@
                     <label for="email" class="control-label">Email</label>
                     <input type="email" class="form-control" id="email"
                            data-ng-model="restaurant.email" name="email" placeholder="Email Address of the new Restaurant"/>
+                    <div ng-show="restaurantForm.email.$invalid && restaurantForm.email.$touched">
+                      <span ng-show="restaurantForm.email.$error.email">This is not a valid email.</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="website" class="control-label">Website</label>
                     <input type="url" class="form-control" id="website"
                            data-ng-model="restaurant.website" name="website" placeholder="Website of the new Restaurant"/>
+                    <div ng-show="restaurantForm.website.$invalid && restaurantForm.website.$touched">
+                      <span class="error" ng-show="restaurantForm.website.$error.url">
+                      This is not a valid url. Ex: http://website.com</span>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="street" class="control-label">Street</label>
