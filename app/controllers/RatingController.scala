@@ -63,7 +63,7 @@ class RatingController @Inject() (ratingRepository: RatingRepository,
   def findSpecific(restId:Int) = SecuredAction.async {
     implicit request => ratingRepository.findSpecific(request.identity.id.get,restId).map {
       case Some(r) => Ok(Json toJson r)
-      case None => BadRequest(Json.obj("message"->"No Rating found!"))
+      case None => NotFound(Json.obj("message"->"No Rating found!"))
     }
   }
 

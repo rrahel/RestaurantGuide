@@ -156,7 +156,7 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
         ).get
         status(createCommentResponse) must be(OK)
         contentType(createCommentResponse) mustBe Some("application/json")
-        val foundComment = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get,0,5).futureValue
+        val foundComment = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get).futureValue
         foundComment.head.content must be("testComment")
       }
     }
@@ -181,7 +181,7 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
         ).get
         status(createCommentResponse) must be(OK)
 
-        val testComment = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get,0,5).futureValue
+        val testComment = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get).futureValue
         val token2 = CSRF.SignedTokenProvider.generateToken
         val deleteCommentString = "/comment/" + testComment.head.id.get
         val deleteCommentResponse = route(FakeRequest(DELETE, deleteCommentString)
@@ -238,7 +238,7 @@ class CommentControllerSpec extends PlaySpec with ScalaFutures {
         ).get
         status(createCommentResponse) must be(OK)
 
-        val testComment = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get,0,5).futureValue
+        val testComment = commentRepo.readAllCommentsFromOneRestaurant(restaurant1.id.get).futureValue
         val token2 = CSRF.SignedTokenProvider.generateToken
         val changeComment = Comment(None, "changeComment", insertedUser.id.get, restaurant1.id.get)
         val updateCommentString = "/comment/" + testComment.head.id.get
