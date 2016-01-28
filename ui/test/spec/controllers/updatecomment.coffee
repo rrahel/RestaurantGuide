@@ -1,4 +1,3 @@
-###
 'use strict'
 
 describe 'Controller: UpdatecommentCtrl', ->
@@ -9,40 +8,37 @@ describe 'Controller: UpdatecommentCtrl', ->
 
   scope = {}
   $httpBackend = {}
-  $location = {}
   $routeParams = {}
 
-  comment =
+  comment = {
     id: 1
-    content: "testComment"
+    content: "Best Restaurant"
     userId: 1
     restaurantId: 1
+  }
+
+  updateComment = {
+    id: 1
+    content: "Good Restaurant"
+    userId: 1
+    restaurantId: 1
+  }
+
+  commId = undefined
 
   # Initialize the controller and a mock scope
-  beforeEach inject ($controller, $rootScope,_$httpBackend_,_$location_,_$routeParams_) ->
+  beforeEach inject ($controller, $rootScope,_$httpBackend_,_$routeParams_) ->
     scope = $rootScope.$new()
-    $location = _$location_
     $httpBackend = _$httpBackend_
     $routeParams = _$routeParams_
     $controller 'UpdatecommentCtrl', $scope: scope
 
-  it 'should delete a comment and go to the start page if successful', ->
-    scope.comment = angular.extend scope.comment,comment
-    $routeParams.commentId = 1
-    $location.path "/updateComment"
-    $httpBackend.expectPOST("/comment/1",comment).respond 200
-    scope.update(comment.id)
+  it 'should find and update a comment',  ->
+    expect(scope.comment).toEqual {}
+    $routeParams.commId = 1
+    commId = $routeParams.commId
+    $httpBackend.expectGET("/comment/#{commId}").respond 200, comment
+    scope.update
+    $httpBackend.expectPOST("/comment/#{commId}", updateComment).respond 200
     $httpBackend.flush()
-    expect($location.path()).toBe "/"
-
-
-  it "should provide an error message if delete fails", ->
-    scope.comment = angular.extend scope.comment,comment
-    $routeParams.commentId = 1
-    $location.path "/updateComment"
-    $httpBackend.expectPOST("/comment/1",comment).respond 500,message: "An Error occured!"
-    scope.update(comment.id)
-    $httpBackend.flush()
-    expect($location.path()).toBe "/updateComment"
-    expect(scope.error).toBe "An Error occured!"
-###
+    expect(scope.comment.content).toBe "Good Restaurant"
