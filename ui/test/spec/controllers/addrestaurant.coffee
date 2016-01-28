@@ -56,7 +56,7 @@ describe 'Controller: AddrestaurantCtrl', ->
       id: n
       name: "Rest #{n}"
       description: "desc #{n}"
-      catgory: 2
+      category: 2
       phone:  "123987123"
       email: "email #{n}"
       website: "web #{n}"
@@ -76,7 +76,7 @@ describe 'Controller: AddrestaurantCtrl', ->
   restaurant =
     name: "Rest"
     description: "desc"
-    catgory: 2
+    category: 2
     phone:  "123987123"
     email: "email"
     website: "web"
@@ -92,49 +92,44 @@ describe 'Controller: AddrestaurantCtrl', ->
     lat:  47.069718
     lng:  15.409874
   # Initialize the controller and a mock scope
-  beforeEach inject ($controller, $rootScope,_$httpBackend_,_$location_) ->
+  beforeEach inject ($controller, $rootScope,_$httpBackend_,_$location_,_GeoCoder_) ->
     scope = $rootScope.$new()
     $location = _$location_
     $httpBackend = _$httpBackend_
+    GeoCoder = _GeoCoder_
     $controller 'AddrestaurantCtrl', $scope: scope
 
 
-  it 'should create a new restaurant and go to the start page if successful', ->
+  it 'should create a new restaurant', ->
     categories = createCategories(3)
+    restaurants = createRestaurants(5)
+    $httpBackend.expectGET('/restaurants').respond 200, restaurants
     $httpBackend.expectGET('/categories').respond 200, categories
     expect(scope.restaurant).toEqual {}
     expect(scope.categories).toEqual []
+    $httpBackend.expectGET('/views/main.html').respond 200
     $httpBackend.flush()
     expect(scope.categories).toEqual categories
     newRestaurant = angular.copy restaurant
     newRestaurant.lat = location.lat
     newRestaurant.lng = location.lng
     $httpBackend.expectPOST('/restaurants', newRestaurant).respond 200
-    $httpBackend.expectDELETE('/restaurants').respond 200
+    scope.restaurant.name="Rest"
+    scope.restaurant.description = "desc"
+    scope.restaurant.category = 2
+    scope.restaurant.phone = "123987123"
+    scope.restaurant.email = "email"
+    scope.restaurant.website = "web"
+    scope.restaurant.rating = 3
+    scope.restaurant.zip = "8020"
+    scope.restaurant.city = "Graz"
+    scope.restaurant.street = "Street 1"
     GeoCoder.expectCoding("8020 Graz, Street 1").respond(location.lat,location.lng)
     scope.save()
     GeoCoder.flush()
     expect(scope.restaurant.lat).toBe location.lat
     expect(scope.restaurant.lng).toBe location.lng
     $httpBackend.flush()
-    expect($location.path()).toBe "/addRestaurant"
-###
-
-    scope.restaurant = angular.extend scope.restaurant,restaurant
-    $location.path "/addrestaurant"
-    $httpBackend.expectPOST("/restaurants",restaurant).respond 200
-    scope.save()
-    $httpBackend.flush()
+    $httpBackend.expectDELETE('/restaurants/1').respond 200
+    scope.deleteRestaurant(1)
     expect($location.path()).toBe "/"
-
-
-  it "should provide an error message if creation fails", ->
-    scope.restaurant = angular.extend scope.restaurant,restaurant
-    $location.path "/addrestaurant"
-    $httpBackend.expectPOST("/restaurants",restaurant).respond 500,message: "An Error occured!"
-    scope.save()
-    $httpBackend.flush()
-    expect($location.path()).toBe "/addrestaurant"
-    expect(scope.error).toBe "An Error occured!"
-
-###
